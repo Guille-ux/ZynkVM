@@ -15,8 +15,11 @@
 /* */
 
 // opcodes.h
+
 #ifndef _ZYNK_OPCODES_H
 #define _ZYNK_OPCODES_H
+
+#include "../common/common.h"
 
 typedef enum {
     OP_RETURN,

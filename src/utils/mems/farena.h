@@ -14,34 +14,27 @@
 /* Copyright (c) 2025 Guillermo Leira Temes
 /* */
 
-#ifndef _ARENA_H
-#define _ARENA_H
+#ifndef _FARENA_H
+#define _FARENA_H
 
 #include "../types.h"
 #include "mem_structs.h"
+//this is a more customizable version of arena
 
-#define MEM_SIZE ((1024)*(1024))*100 //100 megas de memoria
-#define N_ARENAS 128 // no se, algo
-#define ARENA_SIZE ((MEM_SIZE)/(N_ARENAS))
-
-
-MemArena memory[N_ARENAS];
-uint8_t big[MEM_SIZE];
-
-void init_arena(MemArena *arena, int nblock) {
-    arena->size = ARENA_SIZE;
+void finit_arena(MemArena *arena, int nblock, uint8_t *big, uint32_t arena_size) {
+    arena->size = arena_size;
     arena->used = 0;
-    arena->mem = &big[nblock*ARENA_SIZE];
+    arena->mem = &big[nblock*arena_size];
 }
 
-void init_arena_mem() {
-    for (int i=0; i<N_ARENAS; i++) {
-        init_arena(&memory[i], i);
+void finit_arena_mem(uint32_t n_arenas, MemArena *memory) {
+    for (int i=0; i<n_arenas; i++) {
+        finit_arena(&memory[i], i);
     }
 }
 
-MemArena* get_aval(uint32_t size) { //MemArena no esta mal, no mlo probe pero creo que funcionara
-    for (int i=0;i<N_ARENAS; i++) {
+MemArena* fget_aval(uint32_t size, uint32_t n_arenas, MemArena *memory) { //MemArena no esta mal, no mlo probe pero creo que funcionara
+    for (int i=0;i<n_arenas; i++) {
         if (memory[i].size - memory[i].used >= size) {
             MemArena *ptr = &memory[i];
             return ptr;
@@ -49,18 +42,18 @@ MemArena* get_aval(uint32_t size) { //MemArena no esta mal, no mlo probe pero cr
     }
 }
 
-void* allocate(uint32_t size) {
-    MemArena *ptr = get_aval(size);
+void* fallocate(uint32_t size, uint32_t n_arenas, MemArena *memory) {
+    MemArena *ptr = fget_aval(size, n_arenas, memory);
     void *pt = &ptr->mem[ptr->used];
     return pt;
 }
 
-void free(MemArena *arena) {
+void freef(MemArena *arena) {
     arena->used=0;
 }
 
-MemArena* from_where(uint8_t *pt) {
-    for (int i = 0; i < N_ARENAS; i++) {
+MemArena* ffrom_where(uint8_t *pt, uint32_t n_arenas, MemArena *memory) {
+    for (int i = 0; i < n_arenas; i++) {
         uint8_t *start = memory[i].mem;
         uint8_t *end = start + memory[i].size;
         if (pt >= start && pt < end) {
@@ -70,16 +63,16 @@ MemArena* from_where(uint8_t *pt) {
     return NULL;
 }
 
-void ffree(uint8_t *pt) {
-    MemArena *arena = from_where(pt);
+void ffreef(uint8_t *pt, uint32_t n_arenas, MemArena *memory) {
+    MemArena *arena = ffrom_where(pt, n_arenas, memory);
     if (arena != NULL) {
-        free(arena);
+        freef(arena);
     }
 }
 
-uint32_t total_used_mem() {
+uint32_t ftotal_used_mem(MemArena *memory, uint32_t n_arenas) {
     uint32_t sum = 0;
-    for (int i = 0; i < N_ARENAS; i++) {
+    for (int i = 0; i < n_arenas; i++) {
         sum += memory[i].used;
     }
     return sum;

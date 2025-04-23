@@ -14,15 +14,13 @@
 /* Copyright (c) 2025 Guillermo Leira Temes
 /* */
 
-#ifndef _ZYNK_CHUNK_H
-#define _ZYNK_CHUNK_H
+#ifndef _TMEM_H
+#define _TMEM_H
 
-#include "../common/common.h"
-
-typedef struct { //oh algo dinámico
-    uint32_t count;
-    uint32_t capacity;
-    uint8_t* code;
-} Chunk;
+void tmemcpy(uint8_t *recv, uint8_t *sender, uint32_t large) {
+    for (uint32_t i=0; i<large; i++) {
+        recv[i]=sender[i];
+    }
+}
 
 #endif

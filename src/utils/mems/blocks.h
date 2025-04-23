@@ -14,15 +14,28 @@
 /* Copyright (c) 2025 Guillermo Leira Temes
 /* */
 
-#ifndef _ZYNK_CHUNK_H
-#define _ZYNK_CHUNK_H
+#ifndef _BLOCKS_H
+#define _BLOCKS_H
 
-#include "../common/common.h"
+#include "../types.h"
+#include "mem_structs.h"
 
-typedef struct { //oh algo dinámico
-    uint32_t count;
-    uint32_t capacity;
-    uint8_t* code;
-} Chunk;
+void init_block_manager(BlockManager *manager, uint8_t *memory, uint32_t size) {
+    manager->pool=memory;
+    manager->size = size;
+    manager->free_list = (MemBlock*)memory;
+    manager->free_list->size = size;
+    manager->free_list->next = NULL;
+    manager->free_list->is_free = 1;
+}
+
+void *allocate_block(BlockManager *manager, uint32_t size) {
+    //implementar
+}
+
+
+void free_block(BlockManager *manager, void *ptr) {
+    //implementar
+}
 
 #endif

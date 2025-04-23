@@ -19,6 +19,8 @@
 
 #include "types.h"
 #include "mems/arena.h"
+#include "mems/marena.h"
+#include "mems/blocks.h"
 
 void clean(MemArena *arena) {
     uint8_t *start_point = &arena->mem[arena->used];

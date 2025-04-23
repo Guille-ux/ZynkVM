@@ -14,15 +14,38 @@
 /* Copyright (c) 2025 Guillermo Leira Temes
 /* */
 
-#ifndef _ZYNK_CHUNK_H
-#define _ZYNK_CHUNK_H
+#ifndef _MEM_STRUCTS_H
+#define _MEM_STRUCTS_H
 
-#include "../common/common.h"
+#include "../types.h"
 
-typedef struct { //oh algo dinámico
-    uint32_t count;
-    uint32_t capacity;
-    uint8_t* code;
-} Chunk;
+typedef struct {
+    uint8_t *mem; // puntero al bloque principal
+    uint32_t size; // tamaño
+    uint32_t used; // parte usada
+} MemArena;
+
+//blocks for the future
+
+typedef struct {
+    uint32_t size;
+    uint32_t n_arenas;
+    uint32_t arenas_size;
+    uint8_t *memory;
+    MemArena *arenas;
+} MMarena; //Marena Manager
+
+typedef struct MemBlock {
+    uint32_t size;
+    struct MemBlock *next;
+    Bool free;
+} MemBlock;
+
+typedef struct {
+    uint8_t *pool; //se llama pool pero no es más que donde empieza
+    uint32_t size;
+    MemBlock *free_list;
+} BlockManager;
+
 
 #endif

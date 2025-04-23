@@ -24,21 +24,23 @@
 #define ARENA_SIZE ((MEM_SIZE)/(N_ARENAS))
 
 typedef struct {
-    uint8_t mem[ARENA_SIZE]; // puntero al bloque principal
+    uint8_t *mem; // puntero al bloque principal
     uint32_t size; // tamaño
     uint32_t used; // parte usada
 } MemArena;
 
 MemArena memory[N_ARENAS];
+uint8_t big[MEM_SIZE];
 
-void init_arena(MemArena *arena) {
+void init_arena(MemArena *arena, int nblock) {
     arena->size = ARENA_SIZE;
     arena->used = 0;
+    arena->mem = &big[nblock*ARENA_SIZE];
 }
 
 void init_arena_mem() {
     for (int i=0; i<N_ARENAS; i++) {
-        init_arena(&memory[i]);
+        init_arena(&memory[i], i);
     }
 }
 
@@ -57,12 +59,28 @@ void* allocate(uint32_t size) {
     return pt;
 }
 
-void free(MemArena *arena, uint32_t size) {
-    if (size > arena->size) {}
-    else {
-        arena->used -= size;
+void free(MemArena *arena) {
+    arena->used=0;
+}
+
+MemArena* from_where(uint8_t *pt) {
+    for (int i = 0; i < N_ARENAS; i++) {
+        uint8_t *start = memory[i].mem;
+        uint8_t *end = start + memory[i].size;
+        if (pt >= start && pt < end) {
+            return &memory[i];
+        }
+    }
+    return NULL;
+}
+
+void ffree(uint8_t *pt) {
+    MemArena *arena = from_where(pt);
+    if (arena != NULL) {
+        free(arena);
     }
 }
+
 
 
 #endif

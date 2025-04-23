@@ -27,7 +27,12 @@ void clean(MemArena *arena) {
     for (uint32_t i=used; i < ARENA_SIZE; i++) {
         arena->mem[i] = 0;
     }
+}
 
+void eclean(MemArena *arena) {
+    for (uint32_t i=0; i<ARENA_SIZE; i++) {
+        arena->mem[i]=0;
+    }
 }
 
 #endif

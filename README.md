@@ -2,7 +2,7 @@
 
 <p align="center">
   <a href="" rel="noopener">
- <img width=200px height=200px src="../mimes/zynkvm.png" alt="ZynkMime"></a>
+ <img width=200px height=200px src="mimes/zynkvm.png" alt="ZynkMime"></a>
 </p>
 
 <h3 align="center">Zynk VM</h3>

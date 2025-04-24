@@ -36,12 +36,6 @@ void init_sys() {
     // más cosas
 }
 
-void init_chunk(Chunk *chunk) { 
-    chunk->count=0;
-    chunk->capacity=0;
-    chunk->code=(MemBlock *)NULL;
-}
-
 void writeChunk(Chunk *chunk, uint8_t byte) {
     if (chunk->count >= chunk->capacity) {
         uint32_t old = chunk->capacity;

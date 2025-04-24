@@ -25,4 +25,15 @@ typedef struct { //oh algo dinámico
     MemBlock* code;
 } Chunk;
 
+void init_chunk(Chunk *chunk) { 
+    chunk->count=0;
+    chunk->capacity=0;
+    chunk->code=(MemBlock *)NULL;
+}
+
+void free_chunk(Chunk *chunk) {
+    free_block(chunk->code);
+    init_chunk(chunk);
+}
+
 #endif

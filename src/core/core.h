@@ -27,9 +27,6 @@
 
 BlockManager manager[MEM_SIZE];
 
-void main() {
-    init_sys(); //proceso principal de la máquina
-}
 
 void init_sys() {
     init_blocks(manager);

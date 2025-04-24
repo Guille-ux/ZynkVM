@@ -60,5 +60,16 @@ void writeChunk(Chunk *chunk, uint8_t byte) {
 }
 
 
+MemBlock *reallocate_block(MemBlock *pointer, uint32_t old_size, uint32_t new_size) {
+    if (new_size==0) {
+        free_block(pointer); // liberar bloque
+        return (MemBlock *)NULL;
+    }
+    MemBlock *reallocated = (MemBlock *)allocate_block(manager, new_size);
+    blocpy(reallocated, pointer, old_size);
+    free_block(pointer);
+    return reallocated;
+}
+
 
 #endif

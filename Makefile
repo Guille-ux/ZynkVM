@@ -7,6 +7,7 @@ BDIR = build
 FANSI = -DANSI
 STANDALONE = -DSTANDALONE -nostdlib -ffreestanding
 CFLAGS = -Wall
+SRC = src
 
 all: ansi
 
@@ -17,7 +18,12 @@ ansi:
 alone: CFLAGS += STANDALONE
 alone:
 	
-
+compile:
+	gcc -o $(BDIR)/main $(SRC)/main.c
 
 clean: 
 	rm -rf $(BDIR)/*
+debug: clean
+debug: compile
+debug: 
+	gdb $(BDIR)/main run

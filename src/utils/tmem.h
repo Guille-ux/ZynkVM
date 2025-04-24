@@ -31,11 +31,11 @@ void blocpy(MemBlock *recv, MemBlock *sender, uint32_t large) {
     while (i < large) {
         recv->value=sender->value;
         sender=sender->next;
+        recv=recv->next;
         if (sender->next==(MemBlock *)NULL || recv->next==(MemBlock *)NULL) {
             //en el futuro dar error
             break;
         }
-        recv=recv->next;
         i++;
     }
 }

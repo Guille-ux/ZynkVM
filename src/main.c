@@ -14,10 +14,13 @@
 /* Copyright (c) 2025 Guillermo Leira Temes
 /* */
 
-#ifndef _ZYNK_DYNAMIC_H
-#define _ZYNK_DYNAMIC_H
+#include "common/common.h"
+#include "core/core.h"
 
-#include "types.h"
-#include "mems/blocks.h"
-
-#endif
+int main(int argc, const char* argv[]){
+    Chunk chunk;
+    init_chunk(&chunk);
+    writeChunk(&chunk, OP_RETURN);
+    reallocate_block(chunk.code, chunk.capacity, 0);
+    return 0;
+}

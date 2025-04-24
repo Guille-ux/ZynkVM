@@ -20,22 +20,82 @@
 #include "../types.h"
 #include "mem_structs.h"
 
-void init_block_manager(BlockManager *manager, uint8_t *memory, uint32_t size) {
-    manager->pool=memory;
+void init_block_manager(BlockManager *manager, MemBlock *memory, uint32_t size) {
     manager->size = size;
-    manager->free_list = (MemBlock*)memory;
-    manager->free_list->size = size;
+    manager->free_list = memory;
+    manager->free_list->value=0;
     manager->free_list->next = NULL;
-    manager->free_list->is_free = 1;
+    manager->free_list->free = true;
 }
 
-void *allocate_block(BlockManager *manager, uint32_t size) {
-    //implementar
+void init_block(MemBlock *block, BlockManager *manager, uint32_t pos) {
+    block->free=true;
+    block->value=0;
+    block->next=NULL;
+}
+
+void init_blocks(BlockManager *manager) {
+    for (uint32_t i=1; i<manager->size;i++) {
+        init_block(&manager->free_list[i], manager, i);
+    }
+}
+
+void *locate_free(BlockManager *manager) {
+    for (uint32_t i=0; i<manager->size;i++) {
+        if (manager->free_list[i].free==true) {
+            return &manager->free_list[i];
+        }
+    }
+    return NULL;
+}
+
+void *allocate_block(BlockManager *manager, uint32_t size) { // es simple, el sistema hace horrible manejar la memoria luego, pero elimina la fragmentación
+    MemBlock *prev=(MemBlock *)NULL;
+    MemBlock *start=(MemBlock *)NULL;
+    MemBlock *current;
+    uint32_t found=0;
+    MemBlock *n;
+    for (uint32_t i=0;i<manager->size&&found<size;i++) {
+        n=&manager->free_list[i];
+        if (n->free==true) {
+            current=n;
+            if (start==NULL) {
+                start=current;
+            }
+            current->free=false;//asegurarnos de que no esta libre
+            current->value = 0;//limpiando el valor
+            if (prev!=NULL) {
+                // xD, lo habia puesto al reves → current->next=prev;
+                prev->next=current;
+            }
+            prev = (MemBlock *)n;
+            found++;
+        }
+
+    }
+    if (found < size) {
+        //insuficiente memoria
+        return NULL;
+    } else {
+        return start;
+    }
 }
 
 
-void free_block(BlockManager *manager, void *ptr) {
-    //implementar
+void free_block(MemBlock *ptr) { //más simple todavia
+    MemBlock *cnext;
+    while (1) {
+        if (ptr->next==NULL) {
+            ptr->free=true;
+            break;
+        } else {
+            cnext=ptr;
+            ptr->free=true;
+            ptr=(MemBlock *)ptr->next;
+            cnext->next=NULL;
+        }
+        
+    }
 }
 
 #endif

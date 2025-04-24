@@ -22,7 +22,7 @@
 typedef struct { //oh algo dinámico
     uint32_t count;
     uint32_t capacity;
-    uint8_t* code;
+    MemBlock* code;
 } Chunk;
 
 #endif

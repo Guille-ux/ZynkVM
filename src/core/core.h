@@ -23,35 +23,40 @@
 
 #define INITIAL 8 //cuando le falte memoria añadira uno más, asi gastare menos
 #define GROW_FACTOR 2
-#define MEM_SIZE 1024*1024*100
-#define N_BLOCKS 25 //para tener 4 megas por arena
+#define MEM_SIZE 1024*1024 // memoria ram que tendra 1M para la prueba más tarde sera 1024*1024*100 es decir, 100 megas
 
-uint8_t mem[MEM_SIZE];
-MMarena morena; //es random el nombre
+BlockManager manager[MEM_SIZE];
 
-void init_marena_system() {
-    init_marena(&morena, &mem, MEM_SIZE, N_BLOCKS);
+void main() {
+    init_sys(); //proceso principal de la máquina
+}
+
+void init_sys() {
+    init_blocks(manager);
+    // más cosas
 }
 
 void init_chunk(Chunk *chunk) { 
     chunk->count=0;
     chunk->capacity=0;
-    chunk->code=NULL;
+    chunk->code=(MemBlock *)NULL;
 }
 
 void writeChunk(Chunk *chunk, uint8_t byte) {
     if (chunk->count >= chunk->capacity) {
         uint32_t old = chunk->capacity;
+        MemBlock *n_code;
         if (old==0) {
-            uint8_t *n_code = fmalloc(INITIAL, &morena);
+            n_code = (MemBlock *)allocate_block(manager, 8);
         } else {
-            uint8_t *n_code = fmalloc(old*GROW_FACTOR, &morena);
+            n_code = (MemBlock *)allocate_block(manager, old*2);
         }
-        tmemcpy(n_code, chunk->code, old);
+        blocpy(n_code, chunk->code, old);
         chunk->code=n_code;
 
     }
-    chunk->code[chunk->count]=byte;
+    chunk->code[chunk->count].value=byte;
+    chunk->count++;
 }
 
 

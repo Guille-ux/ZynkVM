@@ -17,9 +17,22 @@
 #ifndef _TMEM_H
 #define _TMEM_H
 
+#include "types.h"
+#include "mems/mem_structs.h"
+
 void tmemcpy(uint8_t *recv, uint8_t *sender, uint32_t large) {
     for (uint32_t i=0; i<large; i++) {
         recv[i]=sender[i];
+    }
+}
+
+void blocpy(MemBlock *recv, MemBlock *sender, uint32_t large) {
+    uint32_t i = 0;
+    while (i < large) {
+
+        sender=sender->next;
+        recv=recv->next;
+        i++;
     }
 }
 

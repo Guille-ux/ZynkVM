@@ -67,7 +67,7 @@ MemArena* from_where(uint8_t *pt) {
             return &memory[i];
         }
     }
-    return NULL;
+    return (MemArena *)NULL;
 }
 
 void ffree(uint8_t *pt) {

@@ -27,9 +27,9 @@ void finit_arena(MemArena *arena, int nblock, uint8_t *big, uint32_t arena_size)
     arena->mem = &big[nblock*arena_size];
 }
 
-void finit_arena_mem(uint32_t n_arenas, MemArena *memory) {
+void finit_arena_mem(uint32_t n_arenas, MemArena *memory, uint8_t *big, uint32_t size) {
     for (int i=0; i<n_arenas; i++) {
-        finit_arena(&memory[i], i);
+        finit_arena(&memory[i], i, big, size);
     }
 }
 
@@ -60,7 +60,7 @@ MemArena* ffrom_where(uint8_t *pt, uint32_t n_arenas, MemArena *memory) {
             return &memory[i];
         }
     }
-    return NULL;
+    return (MemArena *)NULL;
 }
 
 void ffreef(uint8_t *pt, uint32_t n_arenas, MemArena *memory) {

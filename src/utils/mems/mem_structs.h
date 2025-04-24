@@ -37,7 +37,7 @@ typedef struct {
 
 typedef struct MemBlock {
     uint8_t value;
-    void *next;
+    MemBlock *next;
     Bool free;
 } MemBlock;
 

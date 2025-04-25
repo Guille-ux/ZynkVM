@@ -13,14 +13,16 @@
 /* 
 /* Copyright (c) 2025 Guillermo Leira Temes
 /* */
-
+#define ANSI_C
 #include "common/common.h"
 #include "core/core.h"
 
 int main(int argc, const char* argv[]){
     Chunk chunk;
+    init_sys();
     init_chunk(&chunk);
     writeChunk(&chunk, OP_RETURN);
+    disassemble_chunk(&chunk, "My HandCrafted Chunk");
     reallocate_block(chunk.code, chunk.capacity, 0);
     return 0;
 }

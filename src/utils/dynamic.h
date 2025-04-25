@@ -20,4 +20,13 @@
 #include "types.h"
 #include "mems/blocks.h"
 
+MemBlock* gotoret(MemBlock *code, uint32_t index) {
+    MemBlock *next = code;
+    for (uint32_t i = 0; i < index; i++) {
+        if (next->next == NULL) break;
+        next = next->next;
+    }
+    return next;
+}
+
 #endif

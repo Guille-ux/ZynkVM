@@ -21,6 +21,7 @@
 #include "../common/common.h"
 #include "chunk.h"
 #include "opcodes.h"
+#include "debug.h"
 
 #define INITIAL 8 //cuando le falte memoria añadira uno más, asi gastare menos
 #define GROW_FACTOR 2
@@ -31,20 +32,15 @@ MemBlock block_list[MEM_SIZE];
 BlockManager manager;
 
 void init_sys() {
-    init_block_manager(&manager, block_list, 0);
+    init_block_manager(&manager, block_list, MEM_SIZE);
     init_blocks(&manager);
     // más cosas
 }
 
-MemBlock* gotoret(MemBlock *code, uint32_t index) {
-    MemBlock *next = code;
-    for (uint32_t i = 0; i < index; i++) {
-        if (next->next == NULL) return NULL;
-        next = next->next;
-    }
-    return next;
+BlockManager cinit_sys(MemBlock *block_l, uint32_t size) {
+    init_block_manager(&manager, block_l, size);
+    init_blocks(&manager);
 }
-
 
 void writeChunk(Chunk *chunk, uint8_t byte) {
     if (chunk->count >= chunk->capacity) {

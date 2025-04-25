@@ -19,7 +19,6 @@
 
 #include "../types.h"
 #include "mem_structs.h"
-#include "stdio.h" //quitar luego
 
 void init_block_manager(BlockManager *manager, MemBlock *memory, uint32_t size) {
     manager->size = size;

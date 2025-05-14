@@ -17,8 +17,8 @@
 #ifndef _ZYNK_COMMON_H
 #define _ZYNK_COMMON_H
 
-#include "../utils/dynamic.h"
 #include "../utils/types.h"
 #include "../utils/tmem.h"
+#include "../../.conduitpkg/sysarena/src/include/sysarena.h"
 
 #endif

@@ -37,9 +37,8 @@ void init_sys() {
     sysarena_init(&manager, memory, arenas, ARENA_SIZE, ARENA_COUNT);
 }
 
-BlockManager cinit_sys(MemBlock *block_l, uint32_t size) {
-    init_block_manager(&manager, block_l, size);
-    init_blocks(&manager);
+void cinit_sys(ArenaManager manager, uint8_t *memoryl, Arena *arenis, uint32_t size, uint32_t arena_count) {
+    sysarena_init(&manager, memoryl, arenis, size, arena_count);
 }
 
 void writeChunk(Chunk *chunk, uint8_t byte) {

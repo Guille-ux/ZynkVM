@@ -1,0 +1,12 @@
+{
+    "version": "0.0.1",
+    "name": "sysarena",
+    "author": "Guillermo Leira Temes",
+    "author_email": "guillermoleiratemes@protonmail.com",
+    "mantainer_email": "NULL",
+    "license": "GPL-3.0-or-later",
+    "dependencies": [],
+    "entries": {
+        "sysarena-build": "cd sysarena ; cd src ; make"
+    }
+}

@@ -44,36 +44,34 @@ void cinit_sys(ArenaManager manager, uint8_t *memoryl, Arena *arenis, uint32_t s
 void writeChunk(Chunk *chunk, uint8_t byte) {
     if (chunk->count >= chunk->capacity) {
         uint32_t old = chunk->capacity;
-        MemBlock *new_code = NULL;
+        uint8_t *new_code = NULL;
 
         if (old == 0) {
-            new_code = allocate_block(&manager, INITIAL);
+            new_code = sysarena_alloc(&manager, INITIAL);
             chunk->capacity = INITIAL;
         } else {
-            new_code = allocate_block(&manager, old * GROW_FACTOR);
-            blocpy(new_code, chunk->code, old);
+            new_code = sysarena_alloc(&manager, old * GROW_FACTOR);
+            tmemcpy(new_code, chunk->code, old);
             chunk->capacity *= GROW_FACTOR;
         }
 
         chunk->code = new_code;
+        sysarena_free(&manager, chunk->code);
     }
 
-    MemBlock *target = gotoret(chunk->code, chunk->count);
-    if (target != NULL) {
-        target->value = byte;
-        chunk->count++;
-    }
+    chunk->code[chunk->count]=byte;
+    chunk->count++;
 }
 
 
-MemBlock *reallocate_block(MemBlock *pointer, uint32_t old_size, uint32_t new_size) {
+uint8_t *reallocate_block(uint8_t *pointer, uint32_t old_size, uint32_t new_size) {
     if (new_size==0) {
         free_block(pointer); // liberar bloque
-        return (MemBlock *)NULL;
+        return (uint8_t *)NULL;
     }
-    MemBlock *reallocated = (MemBlock *)allocate_block(&manager, new_size);
-    blocpy(reallocated, pointer, old_size);
-    free_block(pointer);
+    uint8_t *reallocated = (uint8_t *)sysarena_alloc(&manager, new_size);
+    tmemcpy(reallocated, pointer, old_size);
+    sysarena_free(&manager, pointer);
     return reallocated;
 }
 

@@ -25,42 +25,7 @@ typedef double Value;
 typedef struct {
     int capacity;
     int count;
-    MemBlock* values;
+    uint8_t* values;
 } ValueArray;
-
-Bool write_double(BlockManager *manager, MemBlock *start, double value) {
-    uint8_t *value_ptr = (uint8_t *)&value;
-    MemBlock *current = start;
-    for (int i = 0; i < DOUBLE_SIZE; i++) {
-        if (current == NULL) {
-            return false;
-        }
-        current->value = value_ptr[i];
-        current = current->next;
-    }
-    return true;
-}
-
-double read_double(MemBlock *start) {
-    uint8_t temp[DOUBLE_SIZE];
-    MemBlock *current = start;
-    for (int i = 0; i < DOUBLE_SIZE; i++) {
-        if (current == NULL) {
-
-            return 0.0;
-        }
-        temp[i] = current->value;
-        current = current->next;
-    }
-    double ret;
-    uint64_t bits;
-    for (int i=0; i< DOUBLE_SIZE;i++) {
-        bits |= ((uint64_t)temp[i] << (i * 8));
-
-    }
-    ret = *(double *)bits;
-    return ret;
-}
-
 
 #endif

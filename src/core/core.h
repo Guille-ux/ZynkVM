@@ -26,15 +26,15 @@
 #define INITIAL 8 //cuando le falte memoria añadira uno más, asi gastare menos
 #define GROW_FACTOR 2
 #define MEM_SIZE 1024*1024 // memoria ram que tendra 1M para la prueba más tarde sera 1024*1024*100 es decir, 100 megas
+#define ARENA_COUNT 1024 * 1024 / 4
+#define ARENA_SIZE (MEM_SIZE / ARENA_COUNT)
 
-
-MemBlock block_list[MEM_SIZE];
-BlockManager manager;
+Arena arenas[ARENA_COUNT];
+uint8_t memory[MEM_SIZE];
+ArenaManager manager;
 
 void init_sys() {
-    init_block_manager(&manager, block_list, MEM_SIZE);
-    init_blocks(&manager);
-    // más cosas
+    sysarena_init(&manager, memory, arenas, ARENA_SIZE, ARENA_COUNT);
 }
 
 BlockManager cinit_sys(MemBlock *block_l, uint32_t size) {

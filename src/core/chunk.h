@@ -31,11 +31,18 @@ void init_chunk(Chunk *chunk) {
     chunk->count=0;
     chunk->capacity=0;
     chunk->code=(uint8_t *)NULL;
+    initArray(&chunk->constants);
 }
 
 void free_chunk(ArenaManager *manager, Chunk *chunk) {
     sysarena_free(manager, chunk->code);
     init_chunk(chunk);
+    freeArray(manager, &chunk->constants);
+}
+
+int addConstant(ArenaManager *manager, Chunk *chunk, Value value) {
+    writeArray(manager, &chunk->constants, value);
+    return chunk->constants.count - 1;
 }
 
 void cinit_sys(ArenaManager manager, uint8_t *memoryl, Arena *arenis, size_t size, size_t arena_count) {

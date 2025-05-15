@@ -17,9 +17,10 @@
 #ifndef _ZYNK_COMMON_H
 #define _ZYNK_COMMON_H
 
+#include "../../.conduitpkg/sysarena/src/include/sysarena.h"
 #include "../utils/types.h"
 #include "../utils/tmem.h"
-#include "../../.conduitpkg/sysarena/src/include/sysarena.h"
+
 
 #define INITIAL 8 //cuando le falte memoria añadira uno más, asi gastare menos
 #define GROW_FACTOR 2
@@ -27,7 +28,7 @@
 uint8_t *reallocate(ArenaManager *manager, uint8_t *pointer, size_t old_size, size_t new_size) {
     if (new_size==0) {
         sysarena_free(manager, pointer); // liberar bloque
-        return (uint8_t *)NULL;
+        return (uint8_t *)null;
     }
     uint8_t *reallocated = (uint8_t *)sysarena_alloc(manager, new_size);
     tmemcpy(reallocated, pointer, old_size);

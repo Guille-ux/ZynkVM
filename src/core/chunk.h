@@ -25,12 +25,14 @@ typedef struct { //oh algo dinámico
     size_t capacity;
     uint8_t* code;
     ValueArray constants;
+    size_t *lines;
 } Chunk;
 
 void init_chunk(Chunk *chunk) { 
     chunk->count=0;
     chunk->capacity=0;
-    chunk->code=(uint8_t *)NULL;
+    chunk->code=(uint8_t *)null;
+    chunk->lines=(size_t *)null;
     initArray(&chunk->constants);
 }
 
@@ -52,7 +54,7 @@ void cinit_sys(ArenaManager manager, uint8_t *memoryl, Arena *arenis, size_t siz
 void writeChunk(ArenaManager *manager, Chunk *chunk, uint8_t byte) {
     if (chunk->count >= chunk->capacity) {
         size_t old = chunk->capacity;
-        uint8_t *new_code = NULL;
+        uint8_t *new_code = null;
 
         if (old == 0) {
             new_code = sysarena_alloc(manager, INITIAL);

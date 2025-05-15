@@ -29,7 +29,7 @@ typedef struct {
 } ValueArray;
 
 void initArray(ValueArray *array) {
-    array->values=(uint8_t *)NULL;
+    array->values=(uint8_t *)null;
     array->count=0;
     array->capacity=0;
 }

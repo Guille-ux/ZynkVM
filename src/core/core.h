@@ -34,35 +34,8 @@ uint8_t memory[MEM_SIZE];
 ArenaManager manager;
 
 void init_sys() {
-    sysarena_init(&manager, memory, arenas, ARENA_SIZE, ARENA_COUNT);
+    cinit_sys(manager, memory, arenas, MEM_SIZE, ARENA_COUNT);
 }
-
-void cinit_sys(ArenaManager manager, uint8_t *memoryl, Arena *arenis, uint32_t size, uint32_t arena_count) {
-    sysarena_init(&manager, memoryl, arenis, size, arena_count);
-}
-
-void writeChunk(Chunk *chunk, uint8_t byte) {
-    if (chunk->count >= chunk->capacity) {
-        uint32_t old = chunk->capacity;
-        uint8_t *new_code = NULL;
-
-        if (old == 0) {
-            new_code = sysarena_alloc(&manager, INITIAL);
-            chunk->capacity = INITIAL;
-        } else {
-            new_code = sysarena_alloc(&manager, old * GROW_FACTOR);
-            tmemcpy(new_code, chunk->code, old);
-            chunk->capacity *= GROW_FACTOR;
-        }
-
-        chunk->code = new_code;
-        sysarena_free(&manager, chunk->code);
-    }
-
-    chunk->code[chunk->count]=byte;
-    chunk->count++;
-}
-
 
 uint8_t *reallocate_block(uint8_t *pointer, uint32_t old_size, uint32_t new_size) {
     if (new_size==0) {

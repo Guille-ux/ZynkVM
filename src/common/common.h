@@ -21,4 +21,7 @@
 #include "../utils/tmem.h"
 #include "../../.conduitpkg/sysarena/src/include/sysarena.h"
 
+#define INITIAL 8 //cuando le falte memoria añadira uno más, asi gastare menos
+#define GROW_FACTOR 2
+
 #endif

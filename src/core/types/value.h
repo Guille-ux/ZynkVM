@@ -54,4 +54,9 @@ void freeArray(ArenaManager *manager, ValueArray *array) {
     initArray(array);
 }
 
+
+void printVal(Value val) {
+    printf("%g", val);
+}
+
 #endif

@@ -18,11 +18,13 @@
 #define _ZYNK_CHUNK_H
 
 #include "../common/common.h"
+#include "types/value.h"
 
 typedef struct { //oh algo dinámico
     size_t count;
     size_t capacity;
     uint8_t* code;
+    ValueArray constants;
 } Chunk;
 
 void init_chunk(Chunk *chunk) { 

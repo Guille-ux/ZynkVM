@@ -48,5 +48,4 @@ uint8_t *reallocate_block(uint8_t *pointer, uint32_t old_size, uint32_t new_size
     return reallocated;
 }
 
-
 #endif

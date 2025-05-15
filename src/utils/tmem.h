@@ -19,8 +19,8 @@
 
 #include "types.h"
 
-void tmemcpy(uint8_t *recv, uint8_t *sender, uint32_t large) {
-    for (uint32_t i=0; i<large; i++) {
+void tmemcpy(uint8_t *recv, uint8_t *sender, size_t large) {
+    for (size_t i=0; i<large; i++) {
         recv[i]=sender[i];
     }
 }

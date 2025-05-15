@@ -22,6 +22,7 @@
 #include "chunk.h"
 #include "opcodes.h"
 #include "debug.h"
+#include "types/value.h"
 
 #define INITIAL 8 //cuando le falte memoria añadira uno más, asi gastare menos
 #define GROW_FACTOR 2
@@ -37,15 +38,5 @@ void init_sys() {
     cinit_sys(manager, memory, arenas, MEM_SIZE, ARENA_COUNT);
 }
 
-uint8_t *reallocate_block(uint8_t *pointer, uint32_t old_size, uint32_t new_size) {
-    if (new_size==0) {
-        free_block(pointer); // liberar bloque
-        return (uint8_t *)NULL;
-    }
-    uint8_t *reallocated = (uint8_t *)sysarena_alloc(&manager, new_size);
-    tmemcpy(reallocated, pointer, old_size);
-    sysarena_free(&manager, pointer);
-    return reallocated;
-}
 
 #endif

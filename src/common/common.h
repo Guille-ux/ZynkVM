@@ -24,4 +24,15 @@
 #define INITIAL 8 //cuando le falte memoria añadira uno más, asi gastare menos
 #define GROW_FACTOR 2
 
+uint8_t *reallocate(ArenaManager *manager, uint8_t *pointer, size_t old_size, size_t new_size) {
+    if (new_size==0) {
+        sysarena_free(manager, pointer); // liberar bloque
+        return (uint8_t *)NULL;
+    }
+    uint8_t *reallocated = (uint8_t *)sysarena_alloc(manager, new_size);
+    tmemcpy(reallocated, pointer, old_size);
+    sysarena_free(manager, pointer);
+    return reallocated;
+}
+
 #endif

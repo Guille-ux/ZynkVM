@@ -20,8 +20,8 @@
 #include "../common/common.h"
 
 typedef struct { //oh algo dinámico
-    uint32_t count;
-    uint32_t capacity;
+    size_t count;
+    size_t capacity;
     uint8_t* code;
 } Chunk;
 
@@ -31,31 +31,31 @@ void init_chunk(Chunk *chunk) {
     chunk->code=(uint8_t *)NULL;
 }
 
-void free_chunk(Chunk *chunk) {
-    free_block(chunk->code);
+void free_chunk(ArenaManager *manager, Chunk *chunk) {
+    sysarena_free(manager, chunk->code);
     init_chunk(chunk);
 }
 
-void cinit_sys(ArenaManager manager, uint8_t *memoryl, Arena *arenis, uint32_t size, uint32_t arena_count) {
+void cinit_sys(ArenaManager manager, uint8_t *memoryl, Arena *arenis, size_t size, size_t arena_count) {
     sysarena_init(&manager, memoryl, arenis, size, arena_count);
 }
 
-void writeChunk(Chunk *chunk, uint8_t byte) {
+void writeChunk(ArenaManager *manager, Chunk *chunk, uint8_t byte) {
     if (chunk->count >= chunk->capacity) {
-        uint32_t old = chunk->capacity;
+        size_t old = chunk->capacity;
         uint8_t *new_code = NULL;
 
         if (old == 0) {
-            new_code = sysarena_alloc(&manager, INITIAL);
+            new_code = sysarena_alloc(manager, INITIAL);
             chunk->capacity = INITIAL;
         } else {
-            new_code = sysarena_alloc(&manager, old * GROW_FACTOR);
+            new_code = sysarena_alloc(manager, old * GROW_FACTOR);
             tmemcpy(new_code, chunk->code, old);
             chunk->capacity *= GROW_FACTOR;
         }
 
         chunk->code = new_code;
-        sysarena_free(&manager, chunk->code);
+        sysarena_free(manager, chunk->code);
     }
 
     chunk->code[chunk->count]=byte;

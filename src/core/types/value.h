@@ -28,18 +28,30 @@ typedef struct {
     uint8_t* values;
 } ValueArray;
 
-void init_value_array(ValueArray *array) {
+void initArray(ValueArray *array) {
     array->values=(uint8_t *)NULL;
     array->count=0;
     array->capacity=0;
 }
 
-void write_value_array() {
-
+void writeArray(ArenaManager *manager, ValueArray *array, Value value) {
+    if (array->capacity < array->count + 1) {
+        size_t old_cap = array->capacity;
+        if (old_cap==0) {
+            array->values=reallocate(manager, array->values, old_cap, INITIAL);
+            array->capacity=INITIAL;
+        } else {
+            size_t new_cap = old_cap*GROW_FACTOR;
+            array->values=reallocate(manager, array->values, old_cap, new_cap);
+        }
+    }
+    array->values[array->count] = value;
+    array->count++;
 }
 
-void free_value_array() {
-
+void freeArray(ArenaManager *manager, ValueArray *array) {
+    sysarena_free(manager, array->values);
+    initArray(array);
 }
 
 #endif

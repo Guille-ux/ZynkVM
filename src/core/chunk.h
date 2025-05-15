@@ -38,6 +38,7 @@ void init_chunk(Chunk *chunk) {
 
 void free_chunk(ArenaManager *manager, Chunk *chunk) {
     sysarena_free(manager, chunk->code);
+    sysarena_free(manager, chunk->lines);
     init_chunk(chunk);
     freeArray(manager, &chunk->constants);
 }

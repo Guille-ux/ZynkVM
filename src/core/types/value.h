@@ -28,4 +28,18 @@ typedef struct {
     uint8_t* values;
 } ValueArray;
 
+void init_value_array(ValueArray *array) {
+    array->values=(uint8_t *)NULL;
+    array->count=0;
+    array->capacity=0;
+}
+
+void write_value_array() {
+
+}
+
+void free_value_array() {
+
+}
+
 #endif

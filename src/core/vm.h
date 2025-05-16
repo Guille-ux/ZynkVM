@@ -41,6 +41,13 @@ static ZynkResult run(ZynkVM *vm) {
 
     for (;;) { //anything useful
 #ifdef DEBUG
+        printf("\t");
+        for (Value* slot=vm->stack; slot<vm->stackTop; slot++) {
+            printf("[ ");
+            printVal(*slot);
+            printf(" ]");
+        }
+        printf("\n")
         disassemble_instruction(vm->chunk, size_t (size_t)(vm->ip-vm->chunk->code))
 #endif
         uint8_t instruction;

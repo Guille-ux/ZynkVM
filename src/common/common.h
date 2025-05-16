@@ -36,4 +36,5 @@ void *reallocate(ArenaManager *manager, void *pointer, size_t old_size, size_t n
     return (ptr_t)reallocated;
 }
 
+
 #endif

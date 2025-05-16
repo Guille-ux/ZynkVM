@@ -13,6 +13,11 @@
 /* 
 /* Copyright (c) 2025 Guillermo Leira Temes
 /* */
+
+#ifndef DEBUG
+#define DEBUG
+#endif //only a flag
+
 #ifndef STANDALONE
 
 #ifndef DEBUG_H

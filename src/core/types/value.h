@@ -55,8 +55,12 @@ void freeArray(ArenaManager *manager, ValueArray *array) {
 }
 
 
+
+
+#endif
+
+#ifndef STANDALONE
 void printVal(Value val) {
     printf("%g", val);
 }
-
 #endif

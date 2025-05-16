@@ -19,11 +19,17 @@
 
 #include "../common/common.h"
 #include "../core/opcodes.h"
+#include "../core/types/value.h"
 
 typedef struct {
     char *str;
     size_t len;
 } String;
+
+typedef struct {
+    OpCode opcode;
+    ValueArray values;
+} Instruction;
 
 size_t zlen(const char *str, char sym) {
     size_t count=0;
@@ -33,16 +39,29 @@ size_t zlen(const char *str, char sym) {
     return count;
 }
 
-char zcmp(const char *a, const char *b) {
-    if (zlen(a, '\0')!=zlen(b, '\0')) {
+char zcmp(const char *a, const char *b, char sym) {
+    if (zlen(a, sym)!=zlen(b, sym)) {
         return false;
     }
-    for (size_t i=0;i<zlen(a, '\0');i++) {
+    for (size_t i=0;i<zlen(a, sym);i++) {
         if (*a!=*b) {
             return false;
         }
         a++;
         b++;
+    }
+    return true;
+}
+
+char stringcmp(String a, String b) {
+    if (a.len!=b.len) {
+        return false;
+    }
+    for (size_t i=0;i<a.len;i++) {
+        if (a.str[i]!=b.str[i]) {
+            return false;
+        }
+
     }
     return true;
 }
@@ -63,8 +82,11 @@ String ztok(const char *str, char ch, size_t index) {
     return ret;
 }
 
-OpCode translate_linez(const char *line) {
+Instruction translate_linez(const char *line) {
+    String ins=ztok(line, ' ', 0);
+    if (zcmp(ins.str, "CONSTANT", 'T')) {
 
+    }
 }
 
 #endif

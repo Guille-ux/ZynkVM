@@ -43,7 +43,7 @@ void free_chunk(ArenaManager *manager, Chunk *chunk) {
     freeArray(manager, &chunk->constants);
 }
 
-int addConstant(ArenaManager *manager, Chunk *chunk, Value value) {
+size_t addConstant(ArenaManager *manager, Chunk *chunk, Value value) {
     writeArray(manager, &chunk->constants, value);
     return chunk->constants.count - 1;
 }

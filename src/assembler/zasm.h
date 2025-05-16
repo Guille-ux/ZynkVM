@@ -20,19 +20,24 @@
 #include "../common/common.h"
 #include "../core/opcodes.h"
 
-size_t zlen(const char *str) {
+typedef struct {
+    char *str;
+    size_t len;
+} String;
+
+size_t zlen(const char *str, char sym) {
     size_t count=0;
-    for (;*str!='\0';str++) {
+    for (;*str!=sym;str++) {
         count++;
     }
     return count;
 }
 
 char zcmp(const char *a, const char *b) {
-    if (zlen(a)!=zlen(b)) {
+    if (zlen(a, '\0')!=zlen(b, '\0')) {
         return false;
     }
-    for (size_t i=0;i<zlen(a);i++) {
+    for (size_t i=0;i<zlen(a, '\0');i++) {
         if (*a!=*b) {
             return false;
         }
@@ -42,8 +47,20 @@ char zcmp(const char *a, const char *b) {
     return true;
 }
 
-char **ztok(const char *str) {
-
+String ztok(const char *str, char ch, size_t index) {
+    size_t counter=0;
+    String ret;
+    for (size_t i=0;i<zlen(str, '\0');i++) {
+        if (str[i]==ch) {
+            counter++;
+        }
+        if (counter==index) {
+            ret.str=(char *)&str[i];
+            ret.len=zlen((char *)str[i], ch);
+            break;
+        }
+    }
+    return ret;
 }
 
 OpCode translate_linez(const char *line) {

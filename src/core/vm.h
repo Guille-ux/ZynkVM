@@ -21,9 +21,12 @@
 #include "opcodes.h"
 #include "../common/common.h"
 
+
 typedef struct {
     Chunk* chunk;
     uint8_t *ip; // ip means instruction pointer
+    Value stack[STACK_MAX];
+    Value* stackTop;
 } ZynkVM;
 
 typedef enum {
@@ -53,8 +56,22 @@ static ZynkResult run(ZynkVM *vm) {
 #undef READ
 }
 
-void initVM(ZynkVM *vm) {
+static void reset_stack(ZynkVM *vm) {
+    vm->stackTop=vm->stack;
+}
 
+void push(ZynkVM *vm, Value value) {
+    *vm->stackTop = value;
+    vm->stackTop++;
+}
+
+Value pop(ZynkVM *vm) {
+    vm->stackTop--;
+    return *vm->stackTop;
+}
+
+void initVM(ZynkVM *vm) {
+    reset_stack(vm);
 }
 
 void freeVM(ZynkVM *vm) {

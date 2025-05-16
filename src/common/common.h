@@ -21,9 +21,14 @@
 #include "../utils/types.h"
 #include "../utils/tmem.h"
 
-
 #define INITIAL 8 //cuando le falte memoria añadira uno más, asi gastare menos
 #define GROW_FACTOR 2
+#define MEM_SIZE 1024*1024 // memoria ram que tendra 1M para la prueba más tarde sera 1024*1024*100 es decir, 100 megas
+#define ARENA_COUNT 1024 * 1024 / 4
+#define ARENA_SIZE (MEM_SIZE / ARENA_COUNT)
+#define INITIAL 8 //cuando le falte memoria añadira uno más, asi gastare menos
+#define GROW_FACTOR 2
+#define STACK_MAX 1024 //limite actual de recursión
 
 void *reallocate(ArenaManager *manager, void *pointer, size_t old_size, size_t new_size) {
     if (new_size==0) {

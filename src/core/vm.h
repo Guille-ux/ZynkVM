@@ -20,6 +20,7 @@
 #include "chunk.h"
 #include "opcodes.h"
 #include "../common/common.h"
+#include "../ext/ext.h"
 
 
 typedef struct {
@@ -38,6 +39,12 @@ typedef enum {
 static ZynkResult run(ZynkVM *vm) {
 #define READ() (*vm->ip++)
 #define RCONSTANT() (vm->chunk->constants.values[READ()])
+#define BINARY(op) \
+    do { \
+        double b = (double)pop(vm); \
+        double a = (double)pop(vm); \
+        push(vm, a op b); \
+    } while (false)
 
     for (;;) { //anything useful
 #ifdef DEBUG
@@ -53,12 +60,27 @@ static ZynkResult run(ZynkVM *vm) {
         uint8_t instruction;
         switch (instruction=READ()) {
             case OP_RETURN:
+                // temporal
+                printVal(pop(vm));
+                printf("\n");
+                //end of temporal
                 return ZYNK_OK;
             case OP_CONSTANT:
                 Value constant = RCONSTANT();
-                
+                push(vm, constant);
+            case OP_NEGATE:
+                push(vm, -pop(vm));
+            case OP_ADD:
+                BINARY(+);
+            case OP_SUBSTRACT:
+                BINARY(-);
+            case OP_DIVIDE:
+                BINARY(/);
+            case OP_MULTIPLY:
+                BINARY(*);
         }
     }
+#undef BINARY
 #undef RCONSTANT
 #undef READ
 }

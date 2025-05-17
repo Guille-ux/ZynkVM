@@ -28,7 +28,7 @@
 #define ARENA_SIZE (MEM_SIZE / ARENA_COUNT)
 #define INITIAL 8 //cuando le falte memoria añadira uno más, asi gastare menos
 #define GROW_FACTOR 2
-#define STACK_MAX 1024 //limite actual de recursión
+#define STACK_MAX 256 //limite actual del stack
 
 void *reallocate(ArenaManager *manager, void *pointer, size_t old_size, size_t new_size) {
     if (new_size==0) {

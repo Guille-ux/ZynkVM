@@ -17,9 +17,7 @@
 #ifndef ZASM_H
 #define ZASM_H
 
-#include "../common/common.h"
-#include "../core/opcodes.h"
-#include "../core/types/value.h"
+#include "zcommon.h"
 
 typedef struct {
     char *str;
@@ -27,8 +25,7 @@ typedef struct {
 } String;
 
 typedef struct {
-    OpCode opcode;
-    ValueArray values;
+    uint64_t opcode;
 } Instruction;
 
 size_t zlen(const char *str, char sym) {
@@ -84,9 +81,30 @@ String ztok(const char *str, char ch, size_t index) {
 
 Instruction translate_linez(const char *line) {
     String ins=ztok(line, ' ', 0);
+    Instruction ret;
+    bool val=false;
+    //get OpCode
     if (zcmp(ins.str, "CONSTANT", 'T')) {
+        ret.opcode = OP_CONSTANT;
+        val=true;
+    } else if (zcmp(ins.str, "ADD", 'D')) {
+        ret.opcode = OP_ADD;
+    } else if (zcmp(ins.str, "SUBSTRACT", 'T')) {
+        ret.opcode = OP_SUBSTRACT;
+    } else if (zcmp(ins.str, "MULTIPLY", 'Y')) {
+        ret.opcode = OP_MULTIPLY;
+    } else if (zcmp(ins.str, "DIVIDE", 'E')) {
+        ret.opcode = OP_DIVIDE;
+    } else if (zcmp(ins.str, "RETURN", 'N')) {
+        ret.opcode = OP_RETURN;
+    } else {
+        return ret; //error unknown OpCode
+    }
+    // get values (only if the instruction has a value)
+    if (val) {
 
     }
+    return ret;
 }
 
 #endif

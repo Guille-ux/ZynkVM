@@ -36,6 +36,25 @@ typedef enum {
     ZYNK_RUNTIME_ERROR,
 } ZynkResult;
 
+void load_chunk(ArenaManager *manager, uint8_t *code, double *constants, Chunk *chunk, size_t len) {
+    init_chunk(chunk);
+    for (size_t i=0;i<len;i++) {
+        writeChunk(manager, chunk, code[i], i);
+        if (code[i]==OP_CONSTANT) {
+            size_t index = addConstant(manager, chunk, constants[chunk->constants.count]);
+            uint8_t tmp[sizeof(common_size)];
+#ifndef BIG_ENDIAN
+            storeSizeIn8LEndian((common_size *)index, tmp);
+#else
+            storeSizeIn8BEndian((common_size *)index, tmp);
+#endif
+            for (char z=0;z<sizeof(common_size);z++) {
+                writeChunk(manager, chunk, tmp[z], i);
+            }
+        }
+    }
+}
+
 static ZynkResult run(ZynkVM *vm) {
 #define READ() (*vm->ip++)
 #define RCONSTANT() (vm->chunk->constants.values[READ()])

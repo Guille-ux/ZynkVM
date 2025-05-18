@@ -1,0 +1,75 @@
+Date : 2025-05-18 16:55:04
+Directory : /media/guille/KINGSTON/GPacks/ZynkVM
+Total : 28 files,  755 codes, 303 comments, 201 blanks, all 1259 lines
+
+Languages
++----------+------------+------------+------------+------------+------------+
+| language | files      | code       | comment    | blank      | total      |
++----------+------------+------------+------------+------------+------------+
+| C++      |         15 |        495 |        256 |        140 |        891 |
+| C        |          3 |        185 |         44 |         28 |        257 |
+| Makefile |          2 |         45 |          3 |         22 |         70 |
+| Markdown |          4 |         15 |          0 |         11 |         26 |
+| JSON     |          4 |         15 |          0 |          0 |         15 |
++----------+------------+------------+------------+------------+------------+
+
+Directories
++----------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| path                                                                             | files      | code       | comment    | blank      | total      |
++----------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| .                                                                                |         28 |        755 |        303 |        201 |      1,259 |
+| . (Files)                                                                        |          3 |         32 |          3 |         16 |         51 |
+| .conduitpkg                                                                      |          9 |        224 |         53 |         63 |        340 |
+| .conduitpkg (Files)                                                              |          3 |          3 |          0 |          0 |          3 |
+| .conduitpkg/sysarena                                                             |          6 |        221 |         53 |         63 |        337 |
+| .conduitpkg/sysarena (Files)                                                     |          2 |         13 |          0 |          0 |         13 |
+| .conduitpkg/sysarena/src                                                         |          4 |        208 |         53 |         63 |        324 |
+| .conduitpkg/sysarena/src (Files)                                                 |          1 |         26 |          0 |         15 |         41 |
+| .conduitpkg/sysarena/src/include                                                 |          2 |         55 |         39 |         32 |        126 |
+| .conduitpkg/sysarena/src/src                                                     |          1 |        127 |         14 |         16 |        157 |
+| docs                                                                             |          1 |          1 |          0 |          2 |          3 |
+| src                                                                              |         15 |        498 |        247 |        120 |        865 |
+| src (Files)                                                                      |          1 |         12 |         15 |          1 |         28 |
+| src/assembler                                                                    |          2 |        114 |         30 |         18 |        162 |
+| src/common                                                                       |          1 |         46 |         15 |         11 |         72 |
+| src/core                                                                         |          8 |        301 |        124 |         74 |        499 |
+| src/core (Files)                                                                 |          7 |        262 |        109 |         62 |        433 |
+| src/core/types                                                                   |          1 |         39 |         15 |         12 |         66 |
+| src/ext                                                                          |          1 |          4 |         15 |          3 |         22 |
+| src/utils                                                                        |          2 |         21 |         48 |         13 |         82 |
++----------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+
+Files
++----------------------------------------------------------------------------------+----------+------------+------------+------------+------------+
+| filename                                                                         | language | code       | comment    | blank      | total      |
++----------------------------------------------------------------------------------+----------+------------+------------+------------+------------+
+| /media/guille/KINGSTON/GPacks/ZynkVM/.conduitpkg/entries.json                    | JSON     |          1 |          0 |          0 |          1 |
+| /media/guille/KINGSTON/GPacks/ZynkVM/.conduitpkg/installed.json                  | JSON     |          1 |          0 |          0 |          1 |
+| /media/guille/KINGSTON/GPacks/ZynkVM/.conduitpkg/list.json                       | JSON     |          1 |          0 |          0 |          1 |
+| /media/guille/KINGSTON/GPacks/ZynkVM/.conduitpkg/sysarena/README.md              | Markdown |          1 |          0 |          0 |          1 |
+| /media/guille/KINGSTON/GPacks/ZynkVM/.conduitpkg/sysarena/package.json           | JSON     |         12 |          0 |          0 |         12 |
+| /media/guille/KINGSTON/GPacks/ZynkVM/.conduitpkg/sysarena/src/Makefile           | Makefile |         26 |          0 |         15 |         41 |
+| /media/guille/KINGSTON/GPacks/ZynkVM/.conduitpkg/sysarena/src/include/sysarena.h | C++      |         30 |         18 |         21 |         69 |
+| /media/guille/KINGSTON/GPacks/ZynkVM/.conduitpkg/sysarena/src/include/types.h    | C++      |         25 |         21 |         11 |         57 |
+| /media/guille/KINGSTON/GPacks/ZynkVM/.conduitpkg/sysarena/src/src/sysarena.c     | C        |        127 |         14 |         16 |        157 |
+| /media/guille/KINGSTON/GPacks/ZynkVM/CONTRIBUTING.md                             | Markdown |          1 |          0 |          2 |          3 |
+| /media/guille/KINGSTON/GPacks/ZynkVM/Makefile                                    | Makefile |         19 |          3 |          7 |         29 |
+| /media/guille/KINGSTON/GPacks/ZynkVM/README.md                                   | Markdown |         12 |          0 |          7 |         19 |
+| /media/guille/KINGSTON/GPacks/ZynkVM/docs/README.md                              | Markdown |          1 |          0 |          2 |          3 |
+| /media/guille/KINGSTON/GPacks/ZynkVM/src/assembler/zasm.h                        | C++      |        107 |         15 |         15 |        137 |
+| /media/guille/KINGSTON/GPacks/ZynkVM/src/assembler/zcommon.h                     | C++      |          7 |         15 |          3 |         25 |
+| /media/guille/KINGSTON/GPacks/ZynkVM/src/common/common.h                         | C        |         46 |         15 |         11 |         72 |
+| /media/guille/KINGSTON/GPacks/ZynkVM/src/core/chunk.h                            | C++      |         53 |         15 |         12 |         80 |
+| /media/guille/KINGSTON/GPacks/ZynkVM/src/core/compiler.h                         | C++      |          5 |         15 |          3 |         23 |
+| /media/guille/KINGSTON/GPacks/ZynkVM/src/core/core.h                             | C++      |         13 |         15 |          9 |         37 |
+| /media/guille/KINGSTON/GPacks/ZynkVM/src/core/debug.h                            | C++      |         67 |         16 |         13 |         96 |
+| /media/guille/KINGSTON/GPacks/ZynkVM/src/core/opcodes.h                          | C++      |         13 |         16 |          5 |         34 |
+| /media/guille/KINGSTON/GPacks/ZynkVM/src/core/scanner.h                          | C++      |          9 |         15 |          4 |         28 |
+| /media/guille/KINGSTON/GPacks/ZynkVM/src/core/types/value.h                      | C++      |         39 |         15 |         12 |         66 |
+| /media/guille/KINGSTON/GPacks/ZynkVM/src/core/vm.h                               | C++      |        102 |         17 |         16 |        135 |
+| /media/guille/KINGSTON/GPacks/ZynkVM/src/ext/ext.h                               | C++      |          4 |         15 |          3 |         22 |
+| /media/guille/KINGSTON/GPacks/ZynkVM/src/main.c                                  | C        |         12 |         15 |          1 |         28 |
+| /media/guille/KINGSTON/GPacks/ZynkVM/src/utils/tmem.h                            | C++      |          9 |         28 |          5 |         42 |
+| /media/guille/KINGSTON/GPacks/ZynkVM/src/utils/types.h                           | C++      |         12 |         20 |          8 |         40 |
+| Total                                                                            |          |        755 |        303 |        201 |      1,259 |
++----------------------------------------------------------------------------------+----------+------------+------------+------------+------------+

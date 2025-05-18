@@ -24,16 +24,50 @@ typedef struct {
     size_t len;
 } String;
 
-typedef struct {
-    uint64_t opcode;
-} Instruction;
 
 size_t zlen(const char *str, char sym) {
     size_t count=0;
-    for (;*str!=sym;str++) {
+    for (;*str!=sym||*str!='\0';str++) {
         count++;
     }
     return count;
+}
+
+double str2double(const char *text) {
+    double ret = 0.0;
+    int sign = 1;
+    size_t i = 0;
+    int decimal_point_found = 0;
+    double decimal_multiplier = 0.1;
+
+    if (text[i] == '-') {
+        sign = -1;
+        i++;
+    } else if (text[i] == '+') {
+        i++;
+    }
+
+    while (text[i] != '\0') {
+        if (text[i] >= '0' && text[i] <= '9') {
+            if (!decimal_point_found) {
+                ret = ret * 10.0 + (text[i] - '0');
+            } else {
+                ret += (text[i] - '0') * decimal_multiplier;
+                decimal_multiplier *= 0.1;
+            }
+            i++;
+        } else if (text[i] == '.') {
+            if (decimal_point_found) {
+                return 0.0/0.0; // NaN (Not a Number)
+            }
+            decimal_point_found = 1;
+            i++;
+        } else {
+            return 0.0/0.0; // NaN (Not a Number)
+        }
+    }
+
+    return ret * sign;
 }
 
 char zcmp(const char *a, const char *b, char sym) {
@@ -79,32 +113,25 @@ String ztok(const char *str, char ch, size_t index) {
     return ret;
 }
 
-Instruction translate_linez(const char *line) {
-    String ins=ztok(line, ' ', 0);
-    Instruction ret;
-    bool val=false;
-    //get OpCode
-    if (zcmp(ins.str, "CONSTANT", 'T')) {
-        ret.opcode = OP_CONSTANT;
-        val=true;
-    } else if (zcmp(ins.str, "ADD", 'D')) {
-        ret.opcode = OP_ADD;
-    } else if (zcmp(ins.str, "SUBSTRACT", 'T')) {
-        ret.opcode = OP_SUBSTRACT;
-    } else if (zcmp(ins.str, "MULTIPLY", 'Y')) {
-        ret.opcode = OP_MULTIPLY;
-    } else if (zcmp(ins.str, "DIVIDE", 'E')) {
-        ret.opcode = OP_DIVIDE;
-    } else if (zcmp(ins.str, "RETURN", 'N')) {
-        ret.opcode = OP_RETURN;
+void translate_linez(const char *line, uint8_t *code, double *constants, size_t *code_index, size_t *constants_index) {
+    if (zcmp(line, "CONSTANT;", ';')) {
+        code[*code_index] = OP_CONSTANT;
+    } else if (zcmp(line, "ADD;", ';')) {
+        code[*code_index] = OP_ADD;
+    } else if (zcmp(line, "SUBSTRACT;", ';')) {
+        code[*code_index] = OP_SUBSTRACT;
+    } else if (zcmp(line, "MULTIPLY;", ';')) {
+        code[*code_index] = OP_MULTIPLY;
+    } else if (zcmp(line, "DIVIDE;", ';')) {
+        code[*code_index] = OP_DIVIDE;
+    } else if (zcmp(line, "RETURN;", ';')) {
+        code[*code_index] = OP_RETURN;
     } else {
-        return ret; //error unknown OpCode
+        constants[*constants_index] = str2double(line);
+        *constants_index++;
+        *code_index--;
     }
-    // get values (only if the instruction has a value)
-    if (val) {
-
-    }
-    return ret;
+    *code_index++;
 }
 
 #endif

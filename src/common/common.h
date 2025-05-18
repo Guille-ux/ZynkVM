@@ -21,6 +21,7 @@
 #include "../utils/types.h"
 #include "../utils/tmem.h"
 
+#define EIGHT_TO_SIZE sizeof(size_t)
 #define INITIAL 8 //cuando le falte memoria añadira uno más, asi gastare menos
 #define GROW_FACTOR 2
 #define MEM_SIZE 1024*1024 // memoria ram que tendra 1M para la prueba más tarde sera 1024*1024*100 es decir, 100 megas
@@ -29,6 +30,8 @@
 #define INITIAL 8 //cuando le falte memoria añadira uno más, asi gastare menos
 #define GROW_FACTOR 2
 #define STACK_MAX 256 //limite actual del stack
+
+typedef uint32_t common_size;
 
 void *reallocate(ArenaManager *manager, void *pointer, size_t old_size, size_t new_size) {
     if (new_size==0) {
@@ -41,5 +44,28 @@ void *reallocate(ArenaManager *manager, void *pointer, size_t old_size, size_t n
     return (ptr_t)reallocated;
 }
 
+void store8InSizeLEndian(uint8_t *source, common_size *dest) { // i need this for the stack
+    for (char i=0;i<sizeof(common_size);i++) {
+        *dest|=(common_size)source[i] << (8*i);
+    }
+}
+
+void storeSizeIn8LEndian(common_size *source, uint8_t *dest) { // the same, but turned
+    for (char i=0;i<sizeof(common_size);i++) {
+        dest[i]=(uint8_t)(*source >> (i*8))&0xFF;
+    }
+}
+
+void store8InSizeBEndian(uint8_t *source, common_size *dest) { // i need this for the stack
+    for (char i=0;i<sizeof(common_size);i++) {
+        *dest|=(common_size)source[i] << (8*(sizeof(common_size)-i-1));
+    }
+}
+
+void storeSizeIn8BEndian(common_size *source, uint8_t *dest) { // the same, but turned
+    for (char i=0;i<sizeof(common_size);i++) {
+        dest[i]=(uint8_t)(*source >> (8*(sizeof(common_size)-i-1)))&0xFF;
+    }
+}
 
 #endif

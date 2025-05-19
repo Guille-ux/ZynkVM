@@ -126,6 +126,8 @@ void translate_linez(const char *line, uint8_t *code, double *constants, size_t 
         code[*code_index] = OP_DIVIDE;
     } else if (zcmp(line, "RETURN;", ';')) {
         code[*code_index] = OP_RETURN;
+    } else if(zcmp(line, "NEGATE;", ';')) {
+        code[*code_index] = OP_NEGATE;
     } else {
         constants[*constants_index] = str2double(line);
         *constants_index++;

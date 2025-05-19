@@ -29,7 +29,7 @@
 #define ARENA_SIZE (MEM_SIZE / ARENA_COUNT)
 #define INITIAL 8 //cuando le falte memoria añadira uno más, asi gastare menos
 #define GROW_FACTOR 2
-#define STACK_MAX 256 //limite actual del stack
+#define STACK_MAX 1024*1024 //limite actual del stack creo que 1M es suficiente de momento, en el futuro sera usando sysarena
 
 typedef uint32_t common_size;
 

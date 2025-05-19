@@ -57,7 +57,24 @@ void load_chunk(ArenaManager *manager, uint8_t *code, double *constants, Chunk *
 
 static ZynkResult run(ZynkVM *vm) {
 #define READ() (*vm->ip++)
-#define RCONSTANT() (vm->chunk->constants.values[READ()])
+#ifndef BIG_ENDIAN
+#define RCONSTANT() ({ \
+    uint8_t *index_init = vm->ip; \
+    vm->ip += sizeof(common_size); \
+    common_size ret; \
+    store8InSizeLEndian(index_init, &ret); \
+    vm->chunk->constants.values[ret]; \
+})
+#else
+#define RCONSTANT() ({ \
+    uint8_t *index_init = vm->ip; \
+    vm->ip += sizeof(common_size); \
+    common_size ret; \
+    store8InSizeBEndian(index_init, &ret); \
+    vm->chunk->constants.values[ret]; \
+})
+#endif
+
 #define BINARY(op) \
     do { \
         double b = (double)pop(vm); \
@@ -110,11 +127,19 @@ static void reset_stack(ZynkVM *vm) {
 
 void push(ZynkVM *vm, Value value) {
     *vm->stackTop = value;
-    vm->stackTop++;
+    if ((size_t)vm->stackTop<STACK_MAX) {
+        vm->stackTop++;
+    } else {
+        // panic(); futura función para errores
+    }
 }
 
 Value pop(ZynkVM *vm) {
-    vm->stackTop--;
+    if (vm->stackTop>0) {
+        vm->stackTop--;
+    } else {
+        return (Value)ZYNK_RUNTIME_ERROR;
+    }
     return *vm->stackTop;
 }
 

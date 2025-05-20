@@ -113,7 +113,7 @@ String ztok(const char *str, char ch, size_t index) {
     return ret;
 }
 
-void translate_linez(const char *line, uint8_t *code, double *constants, size_t *code_index, size_t *constants_index) {
+void translate_linez(const char *line, uint8_t *code, Value *constants, size_t *code_index, size_t *constants_index) {
     if (zcmp(line, "CONSTANT;", ';')) {
         code[*code_index] = OP_CONSTANT;
     } else if (zcmp(line, "ADD;", ';')) {
@@ -128,12 +128,29 @@ void translate_linez(const char *line, uint8_t *code, double *constants, size_t 
         code[*code_index] = OP_RETURN;
     } else if(zcmp(line, "NEGATE;", ';')) {
         code[*code_index] = OP_NEGATE;
-    } else {
-        constants[*constants_index] = str2double(line);
+    } else if (zcmp(line, "TRUE;", ';')) {
+        code[*code_index] = OP_TRUE;
+    } else if (zcmp(line, "FALSE;", ';')) {
+        code[*code_index] = OP_FALSE;
+    } else if (zcmp(line, "NULL;", ';')) {
+        code[*code_index] = OP_NULL;
+    } else if (zcmp(line, "EQUAL;", ';')) {
+        code[*code_index] = OP_EQUAL;
+    } else if (zcmp(line, "GREATER;", ';')) {
+        code[*code_index] = OP_GREATER;
+    } else if (zcmp(line, "LESS;", ';')) {
+        code[*code_index] = OP_LESS;
+    } else if (line[0]=='n') {
+        *code_index--;
         *constants_index++;
+        constants[*constants_index] = NUMBER_VAL(str2double(&line[1]));
+    } else {
         *code_index--;
     }
     *code_index++;
 }
 
 #endif
+
+// template para añadir más elif's >>> } else if (zcmp(line, "TRUE;", ';')) { <<<
+// template para añadir más adiciones de bytecode >>> code[*code_index] = OP_TRUE; <<<

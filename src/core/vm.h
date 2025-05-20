@@ -36,7 +36,7 @@ typedef enum {
     ZYNK_RUNTIME_ERROR,
 } ZynkResult;
 
-void load_chunk(ArenaManager *manager, uint8_t *code, double *constants, Chunk *chunk, size_t len) {
+void load_chunk(ArenaManager *manager, uint8_t *code, Value *constants, Chunk *chunk, size_t len) {
     init_chunk(chunk);
     for (size_t i=0;i<len;i++) {
         writeChunk(manager, chunk, code[i], i);
@@ -52,6 +52,28 @@ void load_chunk(ArenaManager *manager, uint8_t *code, double *constants, Chunk *
                 writeChunk(manager, chunk, tmp[z], i);
             }
         }
+    }
+}
+
+Value compareVals(Value a, Value b) {
+    if (SAME_TYPE(a, b)) {
+        if (IS_BOOL(a)) {
+            if (AS_BOOL(a)==AS_BOOL(b)) {
+                return BOOL_VAL(true);
+            } else {
+                return BOOL_VAL(false);
+            }
+        } else if (IS_NUMBER(a)) {
+            if (AS_NUMBER(a)==AS_NUMBER(b)) {
+                return BOOL_VAL(true);
+            } else {
+                return BOOL_VAL(false);
+            }
+        } else {
+            // runtimeError (Unknown Type)
+        }
+    } else {
+        return BOOL_VAL(false);
     }
 }
 
@@ -77,10 +99,18 @@ static ZynkResult run(ZynkVM *vm) {
 
 #define BINARY(op) \
     do { \
-        double b = (double)pop(vm); \
-        double a = (double)pop(vm); \
-        push(vm, a op b); \
-    } while (false)
+            Value a = pop(vm); \
+            Value b = pop(vm); \
+            if (a.type != b.type) { \
+                    /* runtimeError, they aren't the same */ \
+            } else { \
+                if (IS_BOOL(a)) { \
+                     /* runtimeError, los booleanos no se pueden sumar */ \
+                } else if (IS_NUMBER(a)) { \
+                    a.as.number=AS_NUMBER(a) op AS_NUMBER(b); \
+                } \
+            } \
+    } while (false);
 
     for (;;) { //anything useful
 #ifdef DEBUG
@@ -101,19 +131,65 @@ static ZynkResult run(ZynkVM *vm) {
                 printf("\n");
                 //end of temporal
                 return ZYNK_OK;
-            case OP_CONSTANT:
+            case OP_CONSTANT: {
                 Value constant = RCONSTANT();
                 push(vm, constant);
-            case OP_NEGATE:
-                push(vm, -pop(vm));
+                break;
+            }
+            case OP_NEGATE: {
+                Value val = pop(vm);
+                if (IS_NUMBER(val)) {
+                    val.as.number=-AS_NUMBER(val);
+                } else if (IS_BOOL(val)) {
+                    if (AS_BOOL(val)==true) {
+                        val.as.boolean=false;
+                    } else {
+                        val.as.boolean=true;
+                    }
+                } else {
+                    //runtimeError();
+                }
+                push(vm, val);
+                break;
+            }
             case OP_ADD:
-                BINARY(+);
+                BINARY(+)
+                break;
             case OP_SUBSTRACT:
                 BINARY(-);
+                break;
             case OP_DIVIDE:
                 BINARY(/);
+                break;
             case OP_MULTIPLY:
                 BINARY(*);
+                break;
+            case OP_NULL:
+                push(vm, NULL_VAL);
+                break;
+            case OP_TRUE:
+                push(vm, BOOL_VAL(true));
+                break;
+            case OP_FALSE:
+                push(vm, BOOL_VAL(false));
+                break;
+            case OP_EQUAL:
+                push(vm, compareVals(pop(vm), pop(vm)));
+                break;
+            case OP_GREATER:
+                Value a=pop(vm);
+                Value b=pop(vm);
+                if (SAME_TYPE(a, b) && IS_NUMBER(a)) {
+                    push(vm, BOOL_VAL((AS_NUMBER(a) > AS_NUMBER(b))));
+                }
+                break;
+            case OP_LESS:
+                Value a=pop(vm);
+                Value b=pop(vm);
+                if (SAME_TYPE(a, b) && IS_NUMBER(a)) {
+                    push(vm, BOOL_VAL((AS_NUMBER(a) < AS_NUMBER(b))));
+                }
+                break;
         }
     }
 #undef BINARY
@@ -127,7 +203,7 @@ static void reset_stack(ZynkVM *vm) {
 
 void push(ZynkVM *vm, Value value) {
     *vm->stackTop = value;
-    if ((size_t)vm->stackTop<STACK_MAX) {
+    if ((size_t)(vm->stackTop-vm->stack)<STACK_MAX) {
         vm->stackTop++;
     } else {
         // panic(); futura función para errores
@@ -135,10 +211,10 @@ void push(ZynkVM *vm, Value value) {
 }
 
 Value pop(ZynkVM *vm) {
-    if (vm->stackTop>0) {
+    if (vm->stackTop - vm->stack>0) {
         vm->stackTop--;
     } else {
-        return (Value)ZYNK_RUNTIME_ERROR;
+        // panic(); o tambien puede ser runtimeError
     }
     return *vm->stackTop;
 }

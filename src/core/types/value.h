@@ -20,13 +20,41 @@
 #include "../../common/common.h"
 #define DOUBLE_SIZE 8
 
-typedef double Value;
+typedef enum {
+    ZYNK_BOOL,
+    ZYNK_NUM,
+    ZYNK_NULL,
+    ZYNK_BYTE,
+} ZynkType;
+
+typedef struct {
+    ZynkType type;
+    union {
+        bool boolean;
+        double number;
+        ptr_t pointer;
+        char byte;
+    } as;
+} Value;
 
 typedef struct {
     int capacity;
     int count;
-    uint8_t* values;
+    Value* values;
 } ValueArray;
+
+#define BOOL_VAL(value)   ((Value){ZYNK_BOOL, {.boolean = value}})
+#define NULL_VAL          ((Value){ZYNK_NULL, {.number = 0}})
+#define NUMBER_VAL(value) ((Value){ZYNK_NUM, {.number = value}})
+#define BYTE_VAL(value)   ((Value){ZYNK_BYTE, {.byte = value}})
+#define AS_BOOL(value)    ((value).as.boolean)
+#define AS_NUMBER(value)  ((value).as.number)
+#define AS_BYTE(value)    ((value).as.byte)
+#define IS_BOOL(value)    ((value).type == ZYNK_BOOL)
+#define IS_NULL(value)    ((value).type == ZYNK_NULL)
+#define IS_NUMBER(value)  ((value).type == ZYNK_NUM)
+#define IS_BYTE(value)    ((value).type == ZYNK_BYTE)
+#define SAME_TYPE(a, b)   ((a).type==(b).type)
 
 void initArray(ValueArray *array) {
     array->values=(uint8_t *)null;
@@ -55,12 +83,11 @@ void freeArray(ArenaManager *manager, ValueArray *array) {
 }
 
 
-
-
-#endif
-
 #ifndef STANDALONE
 void printVal(Value val) {
     printf("%g", val);
 }
 #endif
+
+#endif
+

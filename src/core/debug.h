@@ -50,20 +50,19 @@ int disassemble_instruction(Chunk* chunk, size_t offset) {
     }
     uint8_t instruction=chunk->code[offset];
     switch (instruction) {
-        case OP_RETURN:
-            return simple_instruction("OP_RETURN", offset);
-        case OP_CONSTANT:
-            return constant_instruction("OP_CONSTANT", chunk, offset);
-        case OP_NEGATE:
-            return simple_instruction("OP_NEGATE", offset);
-        case OP_ADD:
-            return simple_instruction("OP_ADD", offset);
-        case OP_SUBSTRACT:
-            return simple_instruction("OP_SUBSTRACT", offset);
-        case OP_MULTIPLY:
-            return simple_instruction("OP_MULTIPLY", offset);
-        case OP_DIVIDE:
-            return simple_instruction("OP_DIVIDE", offset);
+        case OP_RETURN: return simple_instruction("OP_RETURN", offset);
+        case OP_CONSTANT: return constant_instruction("OP_CONSTANT", chunk, offset);
+        case OP_NEGATE: return simple_instruction("OP_NEGATE", offset);
+        case OP_ADD: return simple_instruction("OP_ADD", offset);
+        case OP_SUBSTRACT: return simple_instruction("OP_SUBSTRACT", offset);
+        case OP_MULTIPLY: return simple_instruction("OP_MULTIPLY", offset);
+        case OP_DIVIDE: return simple_instruction("OP_DIVIDE", offset);
+        case OP_TRUE: return simple_instruction("OP_TRUE", offset);
+        case OP_FALSE: return simple_instruction("OP_FALSE", offset);
+        case OP_NULL: return simple_instruction("OP_NULL", offset);
+        case OP_GREATER: return simple_instruction("OP_GREATER", offset);
+        case OP_LESS: return simple_instruction("OP_LESS", offset);
+        case OP_EQUAL: return simple_instruction("OP_EQUAL", offset);
         default:
             printf("Unknown Instruction OpCode '%d'\n", instruction);
             return offset + 1;
@@ -94,3 +93,5 @@ void disassemble_chunk(Chunk *chunk, const char * name) {
 
 #endif
 #endif
+
+//template para añadir más cosas:         case OP_DIVIDE: return simple_instruction("OP_DIVIDE", offset);

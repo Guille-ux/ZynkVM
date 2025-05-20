@@ -1,0 +1,10 @@
+"filename", "language", "C++", "Markdown", "comment", "blank", "total"
+"/media/guille/KINGSTON/GPacks/ZynkVM/docs/EN.md", "Markdown", 0, 116, 0, 33, 149
+"/media/guille/KINGSTON/GPacks/ZynkVM/docs/ES.md", "Markdown", 0, 115, 0, 27, 142
+"/media/guille/KINGSTON/GPacks/ZynkVM/docs/README.md", "Markdown", 0, 5, 0, 3, 8
+"/media/guille/KINGSTON/GPacks/ZynkVM/src/assembler/zasm.h", "C++", 16, 0, 2, 1, 19
+"/media/guille/KINGSTON/GPacks/ZynkVM/src/core/debug.h", "C++", -1, 0, 1, 1, 1
+"/media/guille/KINGSTON/GPacks/ZynkVM/src/core/opcodes.h", "C++", 6, 0, 0, 0, 6
+"/media/guille/KINGSTON/GPacks/ZynkVM/src/core/types/value.h", "C++", 26, 0, 0, 2, 28
+"/media/guille/KINGSTON/GPacks/ZynkVM/src/core/vm.h", "C++", 95, 0, 4, 2, 101
+"Total", "-", 142, 236, 7, 69, 454

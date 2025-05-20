@@ -1,7 +1,7 @@
 /* This program is free software: you can redistribute it and/or modify
 /* it under the terms of the GNU General Public License as published by
 /* the Free Software Foundation, either version 3 of the License, or
-/* (at your option) any later version.
+/* any later version.
 /* 
 /* This program is distributed in the hope that it will be useful,
 /* but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -14,27 +14,24 @@
 /* Copyright (c) 2025 Guillermo Leira Temes
 /* */
 
-#ifndef _TYPES_H
-#define _TYPES_H
-//definiendo tipos importantes
+#ifndef ZYNK_OBJECTS
+#define ZYNK_OBJECTS
 
-typedef unsigned char bool;
-#define true 1
-#define false 0
+#include "../../common/common.h"
 
-//-------------------------------------------------//
-// toca definir uint
-//-------------------------------------------------//
 
-typedef unsigned char uint8_t;
-typedef unsigned short uint16_t;
-typedef unsigned int uint32_t;
-typedef unsigned long long uint64_t;
+typedef enum {
+    ZYNK_OBJ_STRING,
+} ObjType;
 
-typedef unsigned long size_t;
+struct Obj {
+    ObjType type;
+};
 
-//oh, NULL
-
-#define NULL ( (void *) 0)
+struct ObjString {
+    Obj* obj;
+    uint32_t length;
+    char *chars;
+};
 
 #endif

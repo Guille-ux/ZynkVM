@@ -25,6 +25,41 @@ void tmemcpy(uint8_t *recv, uint8_t *sender, size_t large) {
     }
 }
 
+uint32_t tlen(char *chars) {
+    uint32_t counter=0;
+    while (chars[counter]!='\0') {
+        counter++;
+    }
+    return counter;
+}
+
+bool tmemcmp(uint8_t *a, uint8_t *b) {
+    uint32_t la = tlen(a);
+    if (la != tlen(b)) {
+        return false;
+    } else {
+        for (uint32_t i=0;i<la;i++) {
+            if (a[i]!=b[i]) {
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
+bool fmemcmp(uint8_t *a, uint8_t *b, uint32_t la, uint32_t lb) {
+    if (la!=lb) {
+        return false;
+    } else {
+        for (uint32_t i=0;i<la;i++) {
+            if (a[i]!=b[i]) {
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
 //void blocpy(MemBlock *recv, MemBlock *sender, uint32_t large) {
 //    uint32_t i = 0;
 //    while (i < large) {

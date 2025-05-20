@@ -18,6 +18,7 @@
 #define ZYNK_VALUE_H
 
 #include "../../common/common.h"
+#include "object.h"
 #define DOUBLE_SIZE 8
 
 typedef enum {
@@ -25,6 +26,7 @@ typedef enum {
     ZYNK_NUM,
     ZYNK_NULL,
     ZYNK_BYTE,
+    ZYNK_OBJ,
 } ZynkType;
 
 typedef struct {
@@ -32,10 +34,13 @@ typedef struct {
     union {
         bool boolean;
         double number;
-        ptr_t pointer;
+        Obj* obj;
         char byte;
     } as;
 } Value;
+
+typedef struct Obj Obj;
+typedef struct ObjString ObjString;
 
 typedef struct {
     int capacity;
@@ -43,18 +48,51 @@ typedef struct {
     Value* values;
 } ValueArray;
 
+static Obj* allocateObj(ArenaManager *manager, size_t size, ObjType ot) {
+    Obj* object = (Obj *)reallocate(manager, null, 0, size);
+    object->type = ot;
+    return object;
+}
+
 #define BOOL_VAL(value)   ((Value){ZYNK_BOOL, {.boolean = value}})
 #define NULL_VAL          ((Value){ZYNK_NULL, {.number = 0}})
 #define NUMBER_VAL(value) ((Value){ZYNK_NUM, {.number = value}})
 #define BYTE_VAL(value)   ((Value){ZYNK_BYTE, {.byte = value}})
+#define OBJ_VAL(object)   ((Value){ZYNK_OBJ, {.obj = (Obj*)object}})
 #define AS_BOOL(value)    ((value).as.boolean)
 #define AS_NUMBER(value)  ((value).as.number)
 #define AS_BYTE(value)    ((value).as.byte)
+#define AS_OBJ(value)     ((value).as.obj)
 #define IS_BOOL(value)    ((value).type == ZYNK_BOOL)
 #define IS_NULL(value)    ((value).type == ZYNK_NULL)
 #define IS_NUMBER(value)  ((value).type == ZYNK_NUM)
 #define IS_BYTE(value)    ((value).type == ZYNK_BYTE)
+#define IS_OBJ(value)     ((value).type == ZYNK_OBJ)
+#define IS_STRING(value)  isObjType(value, ZYNK_OBJ_STRING)
 #define SAME_TYPE(a, b)   ((a).type==(b).type)
+#define OBJ_TYPE(object)  (AS_OBJ(object)->type)
+#define AS_STRING(value)  ((ObjString*)AS_OBJ(value))
+#define AS_CSTRING(value) (((ObjString*)AS_OBJ(value))->chars)
+#define ALLOC_OBJ(manager, ty, ot) \
+    (ty*)allocateObj(manager, sizeof(ty), ot) \
+
+static ObjString* allocateStr(ArenaManager *manager, char *chars, uint32_t length) {
+    ObjString* string = ALLOC_OBJ(manager, ObjString, ZYNK_OBJ_STRING);
+    string->length = length;
+    string->chars = chars;
+    return string;
+}
+
+ObjString* cpyString(ArenaManager *manager, const char *chars, uint32_t length) {
+    char *heapChars = (char *)reallocate(manager, null, 0, sizeof(char)*(length+1));
+    tmemcpy(heapChars, chars, length);
+    heapChars[length] = '\0';
+    return allocateStr(manager, heapChars, length);
+}
+
+static inline bool isObjType(Value value, ObjType type) {
+  return IS_OBJ(value) && AS_OBJ(value)->type == type;
+}
 
 void initArray(ValueArray *array) {
     array->values=(uint8_t *)null;
@@ -87,6 +125,15 @@ void freeArray(ArenaManager *manager, ValueArray *array) {
 void printVal(Value val) {
     printf("%g", val);
 }
+
+void printZynkObject(Value value) {
+  switch (OBJ_TYPE(value)) {
+    case ZYNK_OBJ_STRING:
+      printf("%s", AS_CSTRING(value));
+      break;
+  }
+}
+
 #endif
 
 #endif

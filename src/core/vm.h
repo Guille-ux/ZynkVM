@@ -69,6 +69,8 @@ Value compareVals(Value a, Value b) {
             } else {
                 return BOOL_VAL(false);
             }
+        } else if (IS_STRING(a)) {
+            return BOOL_VAL(fmemcmp((uint8_t *)AS_CSTRING(a), (uint8_t *)AS_CSTRING(b), AS_STRING(a)->length, AS_STRING(b)->length));
         } else {
             // runtimeError (Unknown Type)
         }

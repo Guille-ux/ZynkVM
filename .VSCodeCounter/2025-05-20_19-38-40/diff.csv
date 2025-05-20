@@ -1,0 +1,6 @@
+"filename", "language", "C++", "comment", "blank", "total"
+"/media/guille/KINGSTON/GPacks/ZynkVM/src/core/types/object.h", "C++", 15, 15, 7, 37
+"/media/guille/KINGSTON/GPacks/ZynkVM/src/core/types/value.h", "C++", 40, 0, 7, 47
+"/media/guille/KINGSTON/GPacks/ZynkVM/src/core/vm.h", "C++", 1, 0, 1, 2
+"/media/guille/KINGSTON/GPacks/ZynkVM/src/utils/tmem.h", "C++", 20, 0, 2, 22
+"Total", "-", 76, 15, 17, 108

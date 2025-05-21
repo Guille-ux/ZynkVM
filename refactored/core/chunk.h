@@ -28,53 +28,14 @@ typedef struct { //oh algo dinámico
     size_t *lines;
 } Chunk;
 
-void init_chunk(Chunk *chunk) { 
-    chunk->count=0;
-    chunk->capacity=0;
-    chunk->code=(uint8_t *)null;
-    chunk->lines=(size_t *)null;
-    initArray(&chunk->constants);
-}
+void init_chunk(Chunk *chunk);
 
-void free_chunk(ArenaManager *manager, Chunk *chunk) {
-    sysarena_free(manager, chunk->code);
-    sysarena_free(manager, chunk->lines);
-    init_chunk(chunk);
-    freeArray(manager, &chunk->constants);
-}
+void free_chunk(ArenaManager *manager, Chunk *chunk);
 
-size_t addConstant(ArenaManager *manager, Chunk *chunk, Value value) {
-    writeArray(manager, &chunk->constants, value);
-    return chunk->constants.count - 1;
-}
+size_t addConstant(ArenaManager *manager, Chunk *chunk, Value value);
 
-void cinit_sys(ArenaManager manager, uint8_t *memoryl, Arena *arenis, size_t size, size_t arena_count) {
-    sysarena_init(&manager, memoryl, arenis, size, arena_count);
-}
+void cinit_sys(ArenaManager manager, uint8_t *memoryl, Arena *arenis, size_t size, size_t arena_count);
 
-void writeChunk(ArenaManager *manager, Chunk *chunk, uint8_t byte, size_t line) {
-    if (chunk->count >= chunk->capacity) {
-        size_t old = chunk->capacity;
-        uint8_t *new_code = null;
-
-        if (old == 0) {
-            new_code = sysarena_alloc(manager, INITIAL);
-            chunk->lines = reallocate(manager, chunk->lines, old, INITIAL);
-            chunk->capacity = INITIAL;
-        } else {
-            new_code = sysarena_alloc(manager, old * GROW_FACTOR);
-            chunk->lines = reallocate(manager, chunk->lines, old, old*GROW_FACTOR);
-            tmemcpy(new_code, chunk->code, old);
-            chunk->capacity *= GROW_FACTOR;
-        }
-
-        chunk->code = new_code;
-        sysarena_free(manager, chunk->code);
-    }
-
-    chunk->lines[chunk->count]=line;
-    chunk->code[chunk->count]=byte;
-    chunk->count++;
-}
+void writeChunk(ArenaManager *manager, Chunk *chunk, uint8_t byte, size_t line);
 
 #endif

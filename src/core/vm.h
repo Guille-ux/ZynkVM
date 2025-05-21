@@ -201,6 +201,23 @@ static ZynkResult run(ZynkVM *vm) {
                 Value a=BYTE_VAL(READ());
                 push(vm, a);
                 break;
+            case OP_STRING:
+                uint64_t length = (uint64_t)(AS_NUMBER(pop(vm)));
+
+                break;
+            case OP_DEL:
+                pop(vm);
+                break;
+            case OP_DUPE:
+                Value a=pop(vm);
+                push(vm, a);
+                push(vm, a);
+                break;
+            case OP_BACKDEL:
+                Value a=pop(vm);
+                pop(vm);
+                push(vm, a);
+                break;
         }
     }
 #undef BINARY

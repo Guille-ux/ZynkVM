@@ -142,6 +142,12 @@ void translate_linez(const char *line, uint8_t *code, Value *constants, size_t *
         code[*code_index] = OP_LESS;
     } else if (zcmp(line, "BYTE;", ';')) {
         code[*code_index] = OP_BYTE;
+    } else if (zcmp(line, "DEL;", ';')) {
+        code[*code_index] = OP_DEL;
+    } else if (zcmp(line, "DUPE;", ';')) {
+        code[*code_index] = OP_DUPE;
+    } else if (zcmp(line, "BACKDEL;", ';')) {
+        code[*code_index] = OP_BACKDEL;
     } else if (line[0]=='b') {
         code[*code_index]=line[1];
     } else {

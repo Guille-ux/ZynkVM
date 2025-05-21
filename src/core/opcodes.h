@@ -36,6 +36,10 @@ typedef enum {
     OP_GREATER,
     OP_LESS,
     OP_BYTE,
+    OP_STRING,
+    OP_DUPE,
+    OP_DEL,
+    OP_BACKDEL,
 } OpCode;
 
 #endif

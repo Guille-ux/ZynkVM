@@ -28,6 +28,7 @@ typedef enum {
     ZYNK_NULL,
     ZYNK_BYTE,
     ZYNK_OBJ,
+    ZYNK_VAR,
 } ZynkType;
 
 typedef struct {
@@ -37,6 +38,7 @@ typedef struct {
         double number;
         Obj* obj;
         char byte;
+        char var[8];
     } as;
 } Value;
 

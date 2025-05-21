@@ -21,13 +21,18 @@
 #include "opcodes.h"
 #include "../common/common.h"
 #include "../ext/ext.h"
+#include "types/value.h"
+#include "types/object.h"
 
+#define FREE(manager, type, pointer) reallocate(manager, pointer, sizeof(type), 0)
+#define FREE_ARR(manager, type, pointer, length) reallocate(manager, pointer, sizeof(type)*length, 0)
 
 typedef struct {
     Chunk* chunk;
     uint8_t *ip; // ip means instruction pointer
     Value stack[STACK_MAX];
     Value* stackTop;
+    Obj* objects;
 } ZynkVM;
 
 typedef enum {
@@ -221,12 +226,32 @@ Value pop(ZynkVM *vm) {
     return *vm->stackTop;
 }
 
-void initVM(ZynkVM *vm) {
-    reset_stack(vm);
+static void freeObj(ArenaManager *manager, Obj* obj) {
+    switch (obj->type) {
+        case ZYNK_OBJ_STRING:
+            ObjString* string = (ObjString *)obj;
+            FREE_ARR(manager, char, string->chars, string->length+1);
+            FREE(manager, ObjString, obj);
+            break;
+    }
 }
 
-void freeVM(ZynkVM *vm) {
+void freeObjs(ArenaManager *manager, ZynkVM *vm) {
+    Obj *cobj = vm->objects;
+    while (cobj!=null) {
+        Obj *next = cobj->next;
+        freeObj(manager, cobj);
+        cobj=next;
+    }
+}
 
+void initVM(ZynkVM *vm) {
+    reset_stack(vm);
+    vm->objects=(Obj *)null;
+}
+
+void freeVM(ArenaManager *manager, ZynkVM *vm) {
+    freeObjs(manager, vm);
 }
 
 ZynkResult zynk_interpret(ZynkVM *vm, Chunk *chunk) {

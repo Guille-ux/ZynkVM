@@ -197,6 +197,10 @@ static ZynkResult run(ZynkVM *vm) {
                     push(vm, BOOL_VAL((AS_NUMBER(a) < AS_NUMBER(b))));
                 }
                 break;
+            case OP_BYTE:
+                Value a=BYTE_VAL(READ());
+                push(vm, a);
+                break;
         }
     }
 #undef BINARY

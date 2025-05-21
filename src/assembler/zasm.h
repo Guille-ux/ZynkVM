@@ -140,10 +140,10 @@ void translate_linez(const char *line, uint8_t *code, Value *constants, size_t *
         code[*code_index] = OP_GREATER;
     } else if (zcmp(line, "LESS;", ';')) {
         code[*code_index] = OP_LESS;
-    } else if (line[0]=='n') {
-        *code_index--;
-        *constants_index++;
-        constants[*constants_index] = NUMBER_VAL(str2double(&line[1]));
+    } else if (zcmp(line, "BYTE;", ';')) {
+        code[*code_index] = OP_BYTE;
+    } else if (line[0]=='b') {
+        code[*code_index]=line[1];
     } else {
         *code_index--;
     }

@@ -14,12 +14,6 @@
 /* Copyright (c) 2025 Guillermo Leira Temes
 /* */
 
-#ifndef DEBUG
-#define DEBUG
-#endif //only a flag
-
-#ifndef STANDALONE
-
 #ifndef DEBUG_H
 #define DEBUG_H
 
@@ -28,74 +22,15 @@
 #include "opcodes.h"
 #include <stdio.h>
 
-static size_t simple_instruction(const char *name, size_t offset) {
-    printf(" : %s\n", name);
-    return offset + 1;
-}
-
-static size_t constant_instruction(const char *name, Chunk *chunk, size_t offset) {
-    uint8_t constant = chunk->code[offset+1];
-    printf("%-16s %4d '", name, constant);
-    printVal(chunk->constants.values[constant]);
-    return offset + 2;
-}
-
-
-int disassemble_instruction(Chunk* chunk, size_t offset) {
-    printf("%04d", offset);
-    if (offset > 0 && chunk->lines[offset]==chunk->lines[offset-1]) {
-        printf(" | ");
-    } else {
-        printf("%4d ", chunk->lines[offset]);
-    }
-    uint8_t instruction=chunk->code[offset];
-    switch (instruction) {
-        case OP_RETURN: return simple_instruction("OP_RETURN", offset);
-        case OP_CONSTANT: return constant_instruction("OP_CONSTANT", chunk, offset);
-        case OP_NEGATE: return simple_instruction("OP_NEGATE", offset);
-        case OP_ADD: return simple_instruction("OP_ADD", offset);
-        case OP_SUBSTRACT: return simple_instruction("OP_SUBSTRACT", offset);
-        case OP_MULTIPLY: return simple_instruction("OP_MULTIPLY", offset);
-        case OP_DIVIDE: return simple_instruction("OP_DIVIDE", offset);
-        case OP_TRUE: return simple_instruction("OP_TRUE", offset);
-        case OP_FALSE: return simple_instruction("OP_FALSE", offset);
-        case OP_NULL: return simple_instruction("OP_NULL", offset);
-        case OP_GREATER: return simple_instruction("OP_GREATER", offset);
-        case OP_LESS: return simple_instruction("OP_LESS", offset);
-        case OP_EQUAL: return simple_instruction("OP_EQUAL", offset);
-        case OP_DUPE: return simple_instruction("OP_DUPE", offset);
-        case OP_DEL: return simple_instruction("OP_DEL", offset);
-        case OP_BACKDEL: return simple_instruction("OP_BACKDEL", offset);
-        case OP_STRING: return simple_instruction("OP_STRING", offset);
-        default:
-            printf("Unknown Instruction OpCode '%d'\n", instruction);
-            return offset + 1;
-    }
-}
-
-void disassemble_chunk(Chunk *chunk, const char * name) {
-    printf("[+] == %s == [+] \n", name);
-    printf("%d Instruction/s\n", chunk->count);
-    for (int offset=0;offset<chunk->count;) {
-        offset=disassemble_instruction(chunk, offset);
-    }
-}
-
-#endif
+#ifndef STANDALONE
+size_t simple_instruction(const char *name, size_t offset);
+size_t constant_instruction(const char *name, Chunk *chunk, size_t offset);
+int disassemble_instruction(Chunk* chunk, size_t offset);
+void disassemble_chunk(Chunk *chunk, const char * name);
 #else
-#ifndef DEBUG_H
-#define DEBUG_H
-#include "../common/common.h"
-#include "chunk.h"
-#include "opcodes.h"
-
-#include "../common/common.h"
-#include "chunk.h"
-#include "opcodes.h"
-
-//here will be an implementation made for Munix using it's standard library
-
+// Declaraciones alternativas para Munix aquí si las necesitas
 #endif
+
 #endif
 
 //template para añadir más cosas:         case OP_DIVIDE: return simple_instruction("OP_DIVIDE", offset);

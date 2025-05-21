@@ -18,6 +18,7 @@
 #define ZYNK_VALUE_H
 
 #include "../../common/common.h"
+#include "../vm.h"
 #include "object.h"
 #define DOUBLE_SIZE 8
 
@@ -48,13 +49,7 @@ typedef struct {
     Value* values;
 } ValueArray;
 
-static Obj* allocateObj(ZynkVM *vm, ArenaManager *manager, size_t size, ObjType ot) {
-    Obj* object = (Obj *)reallocate(manager, null, 0, size);
-    object->type = ot;
-    object->next = vm->objects;
-    vm->objects = object;
-    return object;
-}
+static Obj* allocateObj(ZynkVM *vm, ArenaManager *manager, size_t size, ObjType ot);
 
 #define BOOL_VAL(value)   ((Value){ZYNK_BOOL, {.boolean = value}})
 #define NULL_VAL          ((Value){ZYNK_NULL, {.number = 0}})
@@ -78,63 +73,23 @@ static Obj* allocateObj(ZynkVM *vm, ArenaManager *manager, size_t size, ObjType 
 #define ALLOC_OBJ(vm, manager, ty, ot) \
     (ty*)allocateObj(vm, manager, sizeof(ty), ot) \
 
-static ObjString* allocateStr(ZynkVM *vm, ArenaManager *manager, char *chars, uint32_t length) {
-    ObjString* string = ALLOC_OBJ(vm, manager, ObjString, ZYNK_OBJ_STRING);
-    string->length = length;
-    string->chars = chars;
-    return string;
-}
+static ObjString* allocateStr(ZynkVM *vm, ArenaManager *manager, char *chars, uint32_t length);
 
-ObjString* cpyString(ZynkVM *vm, ArenaManager *manager, const char *chars, uint32_t length) {
-    char *heapChars = (char *)reallocate(manager, null, 0, sizeof(char)*(length+1));
-    tmemcpy(heapChars, chars, length);
-    heapChars[length] = '\0';
-    return allocateStr(vm, manager, heapChars, length);
-}
+ObjString* cpyString(ZynkVM *vm, ArenaManager *manager, const char *chars, uint32_t length);
 
-static inline bool isObjType(Value value, ObjType type) {
-  return IS_OBJ(value) && AS_OBJ(value)->type == type;
-}
+static inline bool isObjType(Value value, ObjType type);
 
-void initArray(ValueArray *array) {
-    array->values=(uint8_t *)null;
-    array->count=0;
-    array->capacity=0;
-}
+void initArray(ValueArray *array);
 
-void writeArray(ArenaManager *manager, ValueArray *array, Value value) {
-    if (array->capacity < array->count + 1) {
-        size_t old_cap = array->capacity;
-        if (old_cap==0) {
-            array->values=reallocate(manager, array->values, old_cap, INITIAL);
-            array->capacity=INITIAL;
-        } else {
-            size_t new_cap = old_cap*GROW_FACTOR;
-            array->values=reallocate(manager, array->values, old_cap, new_cap);
-        }
-    }
-    array->values[array->count] = value;
-    array->count++;
-}
+void writeArray(ArenaManager *manager, ValueArray *array, Value value);
 
-void freeArray(ArenaManager *manager, ValueArray *array) {
-    sysarena_free(manager, array->values);
-    initArray(array);
-}
+void freeArray(ArenaManager *manager, ValueArray *array);
 
 
 #ifndef STANDALONE
-void printVal(Value val) {
-    printf("%g", val);
-}
+void printVal(Value val);
 
-void printZynkObject(Value value) {
-  switch (OBJ_TYPE(value)) {
-    case ZYNK_OBJ_STRING:
-      printf("%s", AS_CSTRING(value));
-      break;
-  }
-}
+void printZynkObject(Value value);
 
 #endif
 

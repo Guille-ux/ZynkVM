@@ -14,25 +14,12 @@
 /* Copyright (c) 2025 Guillermo Leira Temes
 /* */
 
-#ifndef ZYNK_OBJECTS
-#define ZYNK_OBJECTS
+#ifndef ZASM_COMMON
+#define ZASM_COMMON
 
-#include "../../common/common.h"
-
-
-typedef enum {
-    ZYNK_OBJ_STRING,
-} ObjType;
-
-struct Obj {
-    ObjType type;
-    struct Obj* next;
-};
-
-struct ObjString {
-    Obj obj;
-    uint32_t length;
-    char *chars;
-};
+#include "../common/common.h"
+#include "../core/opcodes.h"
+#include "../core/chunk.h"
+#include "../core/types/value.h"
 
 #endif

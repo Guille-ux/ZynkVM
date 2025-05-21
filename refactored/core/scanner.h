@@ -14,25 +14,15 @@
 /* Copyright (c) 2025 Guillermo Leira Temes
 /* */
 
-#ifndef ZYNK_OBJECTS
-#define ZYNK_OBJECTS
+#ifndef ZYNK_SCANNER
+#define ZYNK_SCANNER
 
-#include "../../common/common.h"
+#include "../common/common.h"
 
-
-typedef enum {
-    ZYNK_OBJ_STRING,
-} ObjType;
-
-struct Obj {
-    ObjType type;
-    struct Obj* next;
-};
-
-struct ObjString {
-    Obj obj;
-    uint32_t length;
-    char *chars;
-};
+typedef struct {
+    const char* start;
+    const char* current;
+    size_t line;
+} Scanner;
 
 #endif

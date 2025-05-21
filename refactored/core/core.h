@@ -14,25 +14,24 @@
 /* Copyright (c) 2025 Guillermo Leira Temes
 /* */
 
-#ifndef ZYNK_OBJECTS
-#define ZYNK_OBJECTS
 
-#include "../../common/common.h"
+#ifndef _ZYNK_CORE_H
+#define _ZYNK_CORE_H
+
+#include "../common/common.h"
+#include "chunk.h"
+#include "opcodes.h"
+#include "types/value.h"
 
 
-typedef enum {
-    ZYNK_OBJ_STRING,
-} ObjType;
 
-struct Obj {
-    ObjType type;
-    struct Obj* next;
-};
+Arena arenas[ARENA_COUNT];
+uint8_t memory[MEM_SIZE];
+ArenaManager manager;
 
-struct ObjString {
-    Obj obj;
-    uint32_t length;
-    char *chars;
-};
+void init_sys() {
+    cinit_sys(manager, memory, arenas, MEM_SIZE, ARENA_COUNT);
+}
+
 
 #endif

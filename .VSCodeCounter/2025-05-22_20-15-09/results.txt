@@ -1,0 +1,110 @@
+Date : 2025-05-22 20:15:09
+Directory : /media/guille/KINGSTON/GPacks/ZynkVM
+Total : 54 files,  2340 codes, 700 comments, 484 blanks, all 3524 lines
+
+Languages
++----------+------------+------------+------------+------------+------------+
+| language | files      | code       | comment    | blank      | total      |
++----------+------------+------------+------------+------------+------------+
+| C++      |         28 |      1,015 |        481 |        261 |      1,757 |
+| C        |         14 |      1,014 |        216 |        127 |      1,357 |
+| Markdown |          6 |        251 |          0 |         74 |        325 |
+| Makefile |          2 |         45 |          3 |         22 |         70 |
+| JSON     |          4 |         15 |          0 |          0 |         15 |
++----------+------------+------------+------------+------------+------------+
+
+Directories
++----------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| path                                                                             | files      | code       | comment    | blank      | total      |
++----------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| .                                                                                |         54 |      2,340 |        700 |        484 |      3,524 |
+| . (Files)                                                                        |          3 |         32 |          3 |         16 |         51 |
+| .conduitpkg                                                                      |          9 |        224 |         53 |         63 |        340 |
+| .conduitpkg (Files)                                                              |          3 |          3 |          0 |          0 |          3 |
+| .conduitpkg/sysarena                                                             |          6 |        221 |         53 |         63 |        337 |
+| .conduitpkg/sysarena (Files)                                                     |          2 |         13 |          0 |          0 |         13 |
+| .conduitpkg/sysarena/src                                                         |          4 |        208 |         53 |         63 |        324 |
+| .conduitpkg/sysarena/src (Files)                                                 |          1 |         26 |          0 |         15 |         41 |
+| .conduitpkg/sysarena/src/include                                                 |          2 |         55 |         39 |         32 |        126 |
+| .conduitpkg/sysarena/src/src                                                     |          1 |        127 |         14 |         16 |        157 |
+| docs                                                                             |          3 |        237 |          0 |         65 |        302 |
+| refactored                                                                       |         23 |      1,051 |        375 |        196 |      1,622 |
+| refactored (Files)                                                               |          1 |         12 |         15 |          1 |         28 |
+| refactored/assembler                                                             |          3 |        144 |         47 |         26 |        217 |
+| refactored/common                                                                |          1 |         46 |         15 |         11 |         72 |
+| refactored/core                                                                  |         15 |        792 |        235 |        139 |      1,166 |
+| refactored/core (Files)                                                          |         12 |        654 |        190 |        100 |        944 |
+| refactored/core/types                                                            |          3 |        138 |         45 |         39 |        222 |
+| refactored/ext                                                                   |          1 |          4 |         15 |          3 |         22 |
+| refactored/utils                                                                 |          2 |         53 |         48 |         16 |        117 |
+| src                                                                              |         16 |        796 |        269 |        144 |      1,209 |
+| src (Files)                                                                      |          1 |         12 |         15 |          1 |         28 |
+| src/assembler                                                                    |          2 |        136 |         32 |         19 |        187 |
+| src/common                                                                       |          1 |         46 |         15 |         11 |         72 |
+| src/core                                                                         |          9 |        545 |        144 |         94 |        783 |
+| src/core (Files)                                                                 |          7 |        422 |        114 |         66 |        602 |
+| src/core/types                                                                   |          2 |        123 |         30 |         28 |        181 |
+| src/ext                                                                          |          1 |          4 |         15 |          3 |         22 |
+| src/utils                                                                        |          2 |         53 |         48 |         16 |        117 |
++----------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+
+Files
++----------------------------------------------------------------------------------+----------+------------+------------+------------+------------+
+| filename                                                                         | language | code       | comment    | blank      | total      |
++----------------------------------------------------------------------------------+----------+------------+------------+------------+------------+
+| /media/guille/KINGSTON/GPacks/ZynkVM/.conduitpkg/entries.json                    | JSON     |          1 |          0 |          0 |          1 |
+| /media/guille/KINGSTON/GPacks/ZynkVM/.conduitpkg/installed.json                  | JSON     |          1 |          0 |          0 |          1 |
+| /media/guille/KINGSTON/GPacks/ZynkVM/.conduitpkg/list.json                       | JSON     |          1 |          0 |          0 |          1 |
+| /media/guille/KINGSTON/GPacks/ZynkVM/.conduitpkg/sysarena/README.md              | Markdown |          1 |          0 |          0 |          1 |
+| /media/guille/KINGSTON/GPacks/ZynkVM/.conduitpkg/sysarena/package.json           | JSON     |         12 |          0 |          0 |         12 |
+| /media/guille/KINGSTON/GPacks/ZynkVM/.conduitpkg/sysarena/src/Makefile           | Makefile |         26 |          0 |         15 |         41 |
+| /media/guille/KINGSTON/GPacks/ZynkVM/.conduitpkg/sysarena/src/include/sysarena.h | C++      |         30 |         18 |         21 |         69 |
+| /media/guille/KINGSTON/GPacks/ZynkVM/.conduitpkg/sysarena/src/include/types.h    | C++      |         25 |         21 |         11 |         57 |
+| /media/guille/KINGSTON/GPacks/ZynkVM/.conduitpkg/sysarena/src/src/sysarena.c     | C        |        127 |         14 |         16 |        157 |
+| /media/guille/KINGSTON/GPacks/ZynkVM/CONTRIBUTING.md                             | Markdown |          1 |          0 |          2 |          3 |
+| /media/guille/KINGSTON/GPacks/ZynkVM/Makefile                                    | Makefile |         19 |          3 |          7 |         29 |
+| /media/guille/KINGSTON/GPacks/ZynkVM/README.md                                   | Markdown |         12 |          0 |          7 |         19 |
+| /media/guille/KINGSTON/GPacks/ZynkVM/docs/EN.md                                  | Markdown |        116 |          0 |         33 |        149 |
+| /media/guille/KINGSTON/GPacks/ZynkVM/docs/ES.md                                  | Markdown |        115 |          0 |         27 |        142 |
+| /media/guille/KINGSTON/GPacks/ZynkVM/docs/README.md                              | Markdown |          6 |          0 |          5 |         11 |
+| /media/guille/KINGSTON/GPacks/ZynkVM/refactored/assembler/zasm.c                 | C        |        122 |         15 |         11 |        148 |
+| /media/guille/KINGSTON/GPacks/ZynkVM/refactored/assembler/zasm.h                 | C++      |         14 |         17 |         12 |         43 |
+| /media/guille/KINGSTON/GPacks/ZynkVM/refactored/assembler/zcommon.h              | C++      |          8 |         15 |          3 |         26 |
+| /media/guille/KINGSTON/GPacks/ZynkVM/refactored/common/common.h                  | C        |         46 |         15 |         11 |         72 |
+| /media/guille/KINGSTON/GPacks/ZynkVM/refactored/core/chunk.c                     | C        |         42 |         15 |          9 |         66 |
+| /media/guille/KINGSTON/GPacks/ZynkVM/refactored/core/chunk.h                     | C        |         17 |         15 |          9 |         41 |
+| /media/guille/KINGSTON/GPacks/ZynkVM/refactored/core/core.h                      | C++      |         13 |         15 |          9 |         37 |
+| /media/guille/KINGSTON/GPacks/ZynkVM/refactored/core/debug.c                     | C        |         52 |         16 |          7 |         75 |
+| /media/guille/KINGSTON/GPacks/ZynkVM/refactored/core/debug.h                     | C++      |         14 |         17 |          5 |         36 |
+| /media/guille/KINGSTON/GPacks/ZynkVM/refactored/core/hash.c                      | C        |         84 |         15 |          9 |        108 |
+| /media/guille/KINGSTON/GPacks/ZynkVM/refactored/core/hash.h                      | C++      |         24 |         15 |          6 |         45 |
+| /media/guille/KINGSTON/GPacks/ZynkVM/refactored/core/map.c                       | C        |        117 |         15 |          4 |        136 |
+| /media/guille/KINGSTON/GPacks/ZynkVM/refactored/core/map.h                       | C++      |          7 |         15 |          5 |         27 |
+| /media/guille/KINGSTON/GPacks/ZynkVM/refactored/core/opcodes.h                   | C++      |         24 |         16 |          5 |         45 |
+| /media/guille/KINGSTON/GPacks/ZynkVM/refactored/core/types/object.h              | C++      |         16 |         15 |          7 |         38 |
+| /media/guille/KINGSTON/GPacks/ZynkVM/refactored/core/types/value.c               | C        |         58 |         15 |         11 |         84 |
+| /media/guille/KINGSTON/GPacks/ZynkVM/refactored/core/types/value.h               | C++      |         64 |         15 |         21 |        100 |
+| /media/guille/KINGSTON/GPacks/ZynkVM/refactored/core/vm.c                        | C        |        226 |         21 |         15 |        262 |
+| /media/guille/KINGSTON/GPacks/ZynkVM/refactored/core/vm.h                        | C++      |         34 |         15 |         17 |         66 |
+| /media/guille/KINGSTON/GPacks/ZynkVM/refactored/ext/ext.h                        | C++      |          4 |         15 |          3 |         22 |
+| /media/guille/KINGSTON/GPacks/ZynkVM/refactored/main.c                           | C        |         12 |         15 |          1 |         28 |
+| /media/guille/KINGSTON/GPacks/ZynkVM/refactored/utils/tmem.h                     | C++      |         41 |         28 |          8 |         77 |
+| /media/guille/KINGSTON/GPacks/ZynkVM/refactored/utils/types.h                    | C++      |         12 |         20 |          8 |         40 |
+| /media/guille/KINGSTON/GPacks/ZynkVM/src/assembler/zasm.h                        | C++      |        129 |         17 |         16 |        162 |
+| /media/guille/KINGSTON/GPacks/ZynkVM/src/assembler/zcommon.h                     | C++      |          7 |         15 |          3 |         25 |
+| /media/guille/KINGSTON/GPacks/ZynkVM/src/common/common.h                         | C        |         46 |         15 |         11 |         72 |
+| /media/guille/KINGSTON/GPacks/ZynkVM/src/core/chunk.h                            | C        |         53 |         15 |         12 |         80 |
+| /media/guille/KINGSTON/GPacks/ZynkVM/src/core/compiler.h                         | C++      |          5 |         15 |          3 |         23 |
+| /media/guille/KINGSTON/GPacks/ZynkVM/src/core/core.h                             | C++      |         13 |         15 |          9 |         37 |
+| /media/guille/KINGSTON/GPacks/ZynkVM/src/core/debug.h                            | C++      |         70 |         17 |         14 |        101 |
+| /media/guille/KINGSTON/GPacks/ZynkVM/src/core/opcodes.h                          | C++      |         24 |         16 |          5 |         45 |
+| /media/guille/KINGSTON/GPacks/ZynkVM/src/core/scanner.h                          | C++      |          9 |         15 |          4 |         28 |
+| /media/guille/KINGSTON/GPacks/ZynkVM/src/core/types/object.h                     | C++      |         16 |         15 |          7 |         38 |
+| /media/guille/KINGSTON/GPacks/ZynkVM/src/core/types/value.h                      | C++      |        107 |         15 |         21 |        143 |
+| /media/guille/KINGSTON/GPacks/ZynkVM/src/core/vm.h                               | C++      |        248 |         21 |         19 |        288 |
+| /media/guille/KINGSTON/GPacks/ZynkVM/src/ext/ext.h                               | C++      |          4 |         15 |          3 |         22 |
+| /media/guille/KINGSTON/GPacks/ZynkVM/src/main.c                                  | C        |         12 |         15 |          1 |         28 |
+| /media/guille/KINGSTON/GPacks/ZynkVM/src/utils/tmem.h                            | C++      |         41 |         28 |          8 |         77 |
+| /media/guille/KINGSTON/GPacks/ZynkVM/src/utils/types.h                           | C++      |         12 |         20 |          8 |         40 |
+| Total                                                                            |          |      2,340 |        700 |        484 |      3,524 |
++----------------------------------------------------------------------------------+----------+------------+------------+------------+------------+

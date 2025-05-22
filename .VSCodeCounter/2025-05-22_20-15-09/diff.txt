@@ -1,0 +1,68 @@
+Date : 2025-05-22 20:15:09
+Directory : /media/guille/KINGSTON/GPacks/ZynkVM
+Total : 29 files,  1118 codes, 375 comments, 197 blanks, all 1690 lines
+
+Languages
++----------+------------+------------+------------+------------+------------+
+| language | files      | code       | comment    | blank      | total      |
++----------+------------+------------+------------+------------+------------+
+| C        |         10 |        776 |        157 |         87 |      1,020 |
+| C++      |         19 |        342 |        218 |        110 |        670 |
++----------+------------+------------+------------+------------+------------+
+
+Directories
++---------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| path                                                                | files      | code       | comment    | blank      | total      |
++---------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| .                                                                   |         29 |      1,118 |        375 |        197 |      1,690 |
+| refactored                                                          |         23 |      1,051 |        375 |        196 |      1,622 |
+| refactored (Files)                                                  |          1 |         12 |         15 |          1 |         28 |
+| refactored/assembler                                                |          3 |        144 |         47 |         26 |        217 |
+| refactored/common                                                   |          1 |         46 |         15 |         11 |         72 |
+| refactored/core                                                     |         15 |        792 |        235 |        139 |      1,166 |
+| refactored/core (Files)                                             |         12 |        654 |        190 |        100 |        944 |
+| refactored/core/types                                               |          3 |        138 |         45 |         39 |        222 |
+| refactored/ext                                                      |          1 |          4 |         15 |          3 |         22 |
+| refactored/utils                                                    |          2 |         53 |         48 |         16 |        117 |
+| src                                                                 |          6 |         67 |          0 |          1 |         68 |
+| src/assembler                                                       |          1 |          6 |          0 |          0 |          6 |
+| src/core                                                            |          5 |         61 |          0 |          1 |         62 |
+| src/core (Files)                                                    |          3 |         58 |          0 |          1 |         59 |
+| src/core/types                                                      |          2 |          3 |          0 |          0 |          3 |
++---------------------------------------------------------------------+------------+------------+------------+------------+------------+
+
+Files
++---------------------------------------------------------------------+----------+------------+------------+------------+------------+
+| filename                                                            | language | code       | comment    | blank      | total      |
++---------------------------------------------------------------------+----------+------------+------------+------------+------------+
+| /media/guille/KINGSTON/GPacks/ZynkVM/refactored/assembler/zasm.c    | C        |        122 |         15 |         11 |        148 |
+| /media/guille/KINGSTON/GPacks/ZynkVM/refactored/assembler/zasm.h    | C++      |         14 |         17 |         12 |         43 |
+| /media/guille/KINGSTON/GPacks/ZynkVM/refactored/assembler/zcommon.h | C++      |          8 |         15 |          3 |         26 |
+| /media/guille/KINGSTON/GPacks/ZynkVM/refactored/common/common.h     | C        |         46 |         15 |         11 |         72 |
+| /media/guille/KINGSTON/GPacks/ZynkVM/refactored/core/chunk.c        | C        |         42 |         15 |          9 |         66 |
+| /media/guille/KINGSTON/GPacks/ZynkVM/refactored/core/chunk.h        | C        |         17 |         15 |          9 |         41 |
+| /media/guille/KINGSTON/GPacks/ZynkVM/refactored/core/core.h         | C++      |         13 |         15 |          9 |         37 |
+| /media/guille/KINGSTON/GPacks/ZynkVM/refactored/core/debug.c        | C        |         52 |         16 |          7 |         75 |
+| /media/guille/KINGSTON/GPacks/ZynkVM/refactored/core/debug.h        | C++      |         14 |         17 |          5 |         36 |
+| /media/guille/KINGSTON/GPacks/ZynkVM/refactored/core/hash.c         | C        |         84 |         15 |          9 |        108 |
+| /media/guille/KINGSTON/GPacks/ZynkVM/refactored/core/hash.h         | C++      |         24 |         15 |          6 |         45 |
+| /media/guille/KINGSTON/GPacks/ZynkVM/refactored/core/map.c          | C        |        117 |         15 |          4 |        136 |
+| /media/guille/KINGSTON/GPacks/ZynkVM/refactored/core/map.h          | C++      |          7 |         15 |          5 |         27 |
+| /media/guille/KINGSTON/GPacks/ZynkVM/refactored/core/opcodes.h      | C++      |         24 |         16 |          5 |         45 |
+| /media/guille/KINGSTON/GPacks/ZynkVM/refactored/core/types/object.h | C++      |         16 |         15 |          7 |         38 |
+| /media/guille/KINGSTON/GPacks/ZynkVM/refactored/core/types/value.c  | C        |         58 |         15 |         11 |         84 |
+| /media/guille/KINGSTON/GPacks/ZynkVM/refactored/core/types/value.h  | C++      |         64 |         15 |         21 |        100 |
+| /media/guille/KINGSTON/GPacks/ZynkVM/refactored/core/vm.c           | C        |        226 |         21 |         15 |        262 |
+| /media/guille/KINGSTON/GPacks/ZynkVM/refactored/core/vm.h           | C++      |         34 |         15 |         17 |         66 |
+| /media/guille/KINGSTON/GPacks/ZynkVM/refactored/ext/ext.h           | C++      |          4 |         15 |          3 |         22 |
+| /media/guille/KINGSTON/GPacks/ZynkVM/refactored/main.c              | C        |         12 |         15 |          1 |         28 |
+| /media/guille/KINGSTON/GPacks/ZynkVM/refactored/utils/tmem.h        | C++      |         41 |         28 |          8 |         77 |
+| /media/guille/KINGSTON/GPacks/ZynkVM/refactored/utils/types.h       | C++      |         12 |         20 |          8 |         40 |
+| /media/guille/KINGSTON/GPacks/ZynkVM/src/assembler/zasm.h           | C++      |          6 |          0 |          0 |          6 |
+| /media/guille/KINGSTON/GPacks/ZynkVM/src/core/debug.h               | C++      |          4 |          0 |          0 |          4 |
+| /media/guille/KINGSTON/GPacks/ZynkVM/src/core/opcodes.h             | C++      |          5 |          0 |          0 |          5 |
+| /media/guille/KINGSTON/GPacks/ZynkVM/src/core/types/object.h        | C++      |          1 |          0 |          0 |          1 |
+| /media/guille/KINGSTON/GPacks/ZynkVM/src/core/types/value.h         | C++      |          2 |          0 |          0 |          2 |
+| /media/guille/KINGSTON/GPacks/ZynkVM/src/core/vm.h                  | C++      |         49 |          0 |          1 |         50 |
+| Total                                                               |          |      1,118 |        375 |        197 |      1,690 |
++---------------------------------------------------------------------+----------+------------+------------+------------+------------+

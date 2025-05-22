@@ -71,6 +71,7 @@ char zynkMapToASCII(char zynk) {
         case 50: return 'Y';
         case 51: return 'Z';
         case 52: return '_';
+        case 53: return ' ';
     }
 }
 
@@ -129,5 +130,6 @@ char ASCIIMapToZynk(char ascii) {
         case 'Y': return 50;
         case 'Z': return 51;
         case '_': return 52;
+        case ' ': return 53;
     }
 }

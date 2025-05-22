@@ -19,6 +19,8 @@
 
 #include "../common/common.h"
 
+#define ZYNK_MAP_RANGE 54
+
 char zynkMapToASCII(char zynk);
 char ASCIIMapToZynk(char ascii);
 

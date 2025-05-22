@@ -21,5 +21,6 @@
 #include "../core/opcodes.h"
 #include "../core/chunk.h"
 #include "../core/types/value.h"
+#include "../core/map.h"
 
 #endif

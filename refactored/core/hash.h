@@ -19,6 +19,7 @@
 
 #include "../common/common.h"
 #include "types/value.h"
+#include "map.h"
 
 typedef struct {
     bool free;
@@ -35,10 +36,10 @@ typedef struct {
 void initTable(ArenaManager *manager, Table* table);
 void freeTable(ArenaManager *manager, Table *table);
 bool tableSet(ArenaManager *manager, Table *table, Value a, const char name[8]);
-bool tableGet(ArenaManager *manager, Table *table, const char so[8]);
+bool tableGet(ArenaManager *manager, Table *table, const char so[8], Value *value);
 bool tableDelete(ArenaManager *manager, Table *table, const char so[8]);
 void reAdjustTableCapacity(ArenaManager *manager, Table *table, uint32_t capacity);
 void initTableCapacity(ArenaManager *manager, Table *table, uint32_t capacity);
-uint32_t hashStr(char *str);
+uint32_t hash8Str(char *str);
 
 #endif

@@ -29,15 +29,53 @@ void freeTable(ArenaManager *manager, Table *table) {
 }
 
 bool tableSet(ArenaManager *manager, Table *table, Value a, const char name[8]) {
-
+    uint32_t key_hash=hash8Str(name);
+    uint32_t index = key_hash % table->capacity;
+    if (table->capacity <= table->count) {
+        return false; //thre isn't enough memory free
+    }
+    for (;;index = (index + 1) % table->capacity) {
+        if (table->entries[index].free) {
+            table->entries[index].hash=key_hash;
+            table->entries[index].free=false;
+            table->entries[index].value = a;
+            table->count++;
+            break;
+        } if (((index+1)%table->capacity)==index-1) {
+            return false;
+        }
+    }
+    return true;
 }
 
-bool tableGet(ArenaManager *manager, Table *table, const char so[8]) {
-
+bool tableGet(ArenaManager *manager, Table *table, const char so[8], Value *value) {
+    if (table->capacity <= table->count) {
+        return false; //thre isn't enough memory free
+    }
+    uint32_t key_hash=hash8Str(so);
+    uint32_t index = key_hash % table->capacity;
+    for (;;index = (index + 1) % table->capacity) {
+        if (table->entries[index].hash==key_hash) {
+            value = &table->entries[index].value;
+            break;
+        } if (((index+1)%table->capacity)==index-1) {
+            return false;
+        }
+    }
+    return true;
 }
 
 bool tableDelete(ArenaManager *manager, Table *table, const char so[8]) {
-
+    uint32_t key_hash=hash8Str(so);
+    uint32_t index = key_hash % table->capacity;
+    if (table->entries[index].free) {
+        return false;
+    }
+    table->entries[index].hash=(uint32_t)null;
+    table->entries[index].free=true;
+    table->entries[index].value = NULL_VAL;
+    table->count--;
+    return true;
 }
 
 void reAdjustTableCapacity(ArenaManager *manager, Table *table, uint32_t capacity) {
@@ -58,4 +96,13 @@ void initTableCapacity(ArenaManager *manager, Table *table, uint32_t capacity) {
         table->entries[i].value=NULL_VAL;
     }
     table->capacity=capacity;
+}
+
+uint32_t hash8Str(char *str) {
+    uint32_t hash=0;
+    for (char i=0;i<8;i++) {
+        hash ^= (uint8_t)str[i];
+        hash *= ZYNK_MAP_RANGE;
+    }
+    return hash;
 }

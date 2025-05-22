@@ -21,7 +21,8 @@
 #include "types/value.h"
 
 typedef struct {
-    char name[8]; // 8 caracteres son suficientes
+    bool free;
+    uint32_t hash; // el hash, para hacer comprobaciones
     Value value;
 } Entry;
 
@@ -32,9 +33,12 @@ typedef struct {
 } Table;
 
 void initTable(ArenaManager *manager, Table* table);
-void freeTable(ArenaManager *manager);
+void freeTable(ArenaManager *manager, Table *table);
 bool tableSet(ArenaManager *manager, Table *table, Value a, const char name[8]);
 bool tableGet(ArenaManager *manager, Table *table, const char so[8]);
 bool tableDelete(ArenaManager *manager, Table *table, const char so[8]);
+void reAdjustTableCapacity(ArenaManager *manager, Table *table, uint32_t capacity);
+void initTableCapacity(ArenaManager *manager, Table *table, uint32_t capacity);
+uint32_t hashStr(char *str);
 
 #endif

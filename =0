@@ -1,0 +1,5 @@
+Collecting cpkg
+  Downloading cpkg-0.4.21-py3-none-any.whl.metadata (1.9 kB)
+Downloading cpkg-0.4.21-py3-none-any.whl (8.5 kB)
+Installing collected packages: cpkg
+Successfully installed cpkg-0.4.21

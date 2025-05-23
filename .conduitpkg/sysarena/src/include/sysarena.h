@@ -15,6 +15,8 @@
 #ifndef _SYSARENA_H
 #define _SYSARENA_H
 
+#include "../include/types.h" // incluir types.h ya no es rebundante
+
 // definiciones de estructuras
 typedef struct Arena {
     size_t size;

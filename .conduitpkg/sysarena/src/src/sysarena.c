@@ -11,7 +11,6 @@
  along with this program. If not, see <https://www.gnu.org/licenses/>.
  Copyright (c) 2025 Guillermo Leira Temes
 */
-
 #include "../include/types.h" // incluir types.h ya no es rebundante
 #include "../include/sysarena.h" // incluir la arena
 
@@ -19,20 +18,20 @@
 void poor_arena_init(Arena *arena) {
     arena->size=0;
     arena->used=0;
-    arena->base=null;
-    arena->in_use=false;
+    arena->base=NULL;
+    arena->in_use=FALSE;
 }
 
 void arena_init(Arena *arena, size_t size, ptr_t base) {
     arena->size=size;
     arena->base=base;
     arena->used=0;
-    arena->in_use=false;
+    arena->in_use=FALSE;
 }
 
 void* arena_alloc(Arena *arena, size_t size) {
     if (arena->used + size > arena->size) {
-        return null; // devolver null si no hay suficiente memoria
+        return NULL; // devolver null si no hay suficiente memoria
     }
     ptr_t ptr=(void *)(arena->used + arena->base);
     arena->used += size;
@@ -41,7 +40,7 @@ void* arena_alloc(Arena *arena, size_t size) {
 
 void arena_free(Arena *arena) {
     arena->used=0;
-    arena->in_use=false;
+    arena->in_use=FALSE;
 }
 
 void sysarena_init(ArenaManager *manager, uint8_t *memory, Arena *arenas, size_t size, size_t num_arenas) {
@@ -49,35 +48,35 @@ void sysarena_init(ArenaManager *manager, uint8_t *memory, Arena *arenas, size_t
     manager->max_arenas=num_arenas;
     manager->size=size;
     arena_init(&manager->arenas[0], size, (ptr_t)&memory[0]);
-    manager->arenas[0].in_use=true;
+    manager->arenas[0].in_use=TRUE;
     for (size_t i=1; i < num_arenas; i++) {
         poor_arena_init(&manager->arenas[i]);
     }
 }
 
 bool arena_can_merge(Arena *a, Arena *b) {
-    if (a->in_use==false && b->in_use==false) {
-        return true;
+    if (a->in_use==FALSE && b->in_use==FALSE) {
+        return TRUE;
     }
-    return false;
+    return FALSE;
 }
 
 bool arena_is_void(Arena *a) {
     if (a->used==0) {
-        return true;
+        return TRUE;
     }
-    return false;
+    return FALSE;
 }
 
 void arena_merge(Arena *dest, Arena *src) {
     dest->size+=src->size;
-    src->in_use=false;
+    src->in_use=FALSE;
 }
 
 void sysarena_defragment(ArenaManager *manager) {
     for (size_t i = 0; i < manager->max_arenas; i++) {
         size_t x=i+1;
-        while (true) {
+        while (TRUE) {
             if (arena_can_merge(&manager->arenas[i], &manager->arenas[x])) {
                 break;
             }
@@ -100,7 +99,7 @@ void* sysarena_alloc(ArenaManager *manager, size_t size) {
             return to_ret;
         }
     }
-    return null;
+    return NULL;
 }
 
 void sysarena_split(ArenaManager *manager, size_t arena_index, size_t size) {
@@ -121,14 +120,14 @@ void sysarena_split(ArenaManager *manager, size_t arena_index, size_t size) {
     if (new_arena_index == 0) {
         return;
     }
-    if (manager->arenas[new_arena_index].in_use==true) {
+    if (manager->arenas[new_arena_index].in_use==TRUE) {
         sysarena_displacement(manager, new_arena_index);
     }
     Arena *new_arena = &manager->arenas[new_arena_index];
     new_arena->size = size;
     new_arena->base = src->base+(src->size-size);
     new_arena->used = size;
-    new_arena->in_use = true;
+    new_arena->in_use = TRUE;
 
     src->size -= size;
 }

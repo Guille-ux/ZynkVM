@@ -17,6 +17,30 @@
 #ifndef ZYNK_COMMON_H
 #define ZYNK_COMMON_H
 
+#include "../.conduitpkg/sysarena/src/include/types.h"
+#include "../.conduitpkg/sysarena/src/include/sysarena.h"
+
+#define EIGHT_TO_SIZE sizeof(size_t)
+#define INITIAL 8 //cuando le falte memoria añadira uno más, asi gastare menos
+#define GROW_FACTOR 2
+#define MEM_SIZE 1024*1024 // memoria ram que tendra 1M para la prueba más tarde sera 1024*1024*100 es decir, 100 megas
+#define ARENA_COUNT 1024 * 1024 / 4
+#define ARENA_SIZE (MEM_SIZE / ARENA_COUNT)
+#define INITIAL 8 //cuando le falte memoria añadira uno más, asi gastare menos
+#define GROW_FACTOR 2
+#define STACK_MAX 1024*1024 //limite actual del stack creo que 1M es suficiente de momento, en el futuro sera usando sysarena
+
+typedef uint32_t common_size;
+
+void *reallocate(ArenaManager *manager, void *pointer, size_t old_size, size_t new_size);
+
+void store8InSizeLEndian(uint8_t *source, common_size *dest);
+
+void storeSizeIn8LEndian(common_size *source, uint8_t *dest);
+
+void store8InSizeBEndian(uint8_t *source, common_size *dest);
+
+void storeSizeIn8BEndian(common_size *source, uint8_t *dest);
 
 
 #endif

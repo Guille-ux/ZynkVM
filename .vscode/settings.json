@@ -2,6 +2,17 @@
     "files.associations": {
         "common.h": "c",
         "type_traits": "c",
-        "chunk.h": "c"
+        "chunk.h": "c",
+        "types.h": "c",
+        "array": "c",
+        "deque": "c",
+        "string": "c",
+        "vector": "c",
+        "iterator": "c",
+        "string_view": "c",
+        "tmem.h": "c",
+        "sysarena.h": "c",
+        "value.h": "c",
+        "opcodes.h": "c"
     }
 }

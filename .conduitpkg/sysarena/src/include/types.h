@@ -33,11 +33,11 @@ typedef signed long long int64_t;
 
 //los booleanos
 typedef unsigned char bool;
-#define true 1
-#define false 0
+#define TRUE 1
+#define FALSE 0
 
 //NULL es NULL
-#define null ((void*)0)
+#define NULL ((void*)0)
 
 //tipos de punteros
 typedef void* ptr_t;

@@ -14,6 +14,12 @@
 /* Copyright (c) 2025 Guillermo Leira Temes
 /* */
 
+#include "common.h"
+
+Arena arenas[ARENA_COUNT];
+uint8_t memory[MEM_SIZE];
+ArenaManager manager;
+
 int main(int argc, const char *argv[]) {
     return 0;
 }

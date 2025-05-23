@@ -13,18 +13,32 @@
 /* 
 /* Copyright (c) 2025 Guillermo Leira Temes
 /* */
-#define ANSI_C
-#include "common/common.h"
-#include "core/core.h"
 
+#ifndef _TMEM_H
+#define _TMEM_H
 
+#include "../common.h"
 
-int main(int argc, const char* argv[]){
-    Chunk chunk;
-    init_sys();
-    init_chunk(&chunk);
-    writeChunk(&chunk, OP_RETURN);
-    disassemble_chunk(&chunk, "My HandCrafted Chunk");
-    reallocate_block(chunk.code, chunk.capacity, 0);
-    return 0;
-}
+void tmemcpy(uint8_t *recv, uint8_t *sender, size_t large);
+
+uint32_t tlen(char *chars);
+
+bool tmemcmp(uint8_t *a, uint8_t *b);
+
+bool fmemcmp(uint8_t *a, uint8_t *b, uint32_t la, uint32_t lb);
+
+//void blocpy(MemBlock *recv, MemBlock *sender, uint32_t large) {
+//    uint32_t i = 0;
+//    while (i < large) {
+//        recv->value=sender->value;
+//        sender=sender->next;
+//        recv=recv->next;
+//        if (sender->next==(MemBlock *)NULL || recv->next==(MemBlock *)NULL) {
+//            //en el futuro dar error
+//            break;
+//        }
+//        i++;
+//    }
+//}
+
+#endif

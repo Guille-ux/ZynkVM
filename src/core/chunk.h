@@ -1,7 +1,7 @@
 /* This program is free software: you can redistribute it and/or modify
 /* it under the terms of the GNU General Public License as published by
 /* the Free Software Foundation, either version 3 of the License, or
-/* (at your option) any later version.
+/* any later version.
 /* 
 /* This program is distributed in the hope that it will be useful,
 /* but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -13,18 +13,21 @@
 /* 
 /* Copyright (c) 2025 Guillermo Leira Temes
 /* */
-#define ANSI_C
-#include "common/common.h"
-#include "core/core.h"
 
+#ifndef ZYNK_CHUNK
+#define ZYNK_CHUNK
 
+#include "../common.h"
+#include "value.h"
 
-int main(int argc, const char* argv[]){
-    Chunk chunk;
-    init_sys();
-    init_chunk(&chunk);
-    writeChunk(&chunk, OP_RETURN);
-    disassemble_chunk(&chunk, "My HandCrafted Chunk");
-    reallocate_block(chunk.code, chunk.capacity, 0);
-    return 0;
-}
+void init_chunk(Chunk *chunk);
+
+void free_chunk(ArenaManager *manager, Chunk *chunk);
+
+size_t addConstant(ArenaManager *manager, Chunk *chunk, Value value);
+
+void cinit_sys(ArenaManager manager, uint8_t *memoryl, Arena *arenis, size_t size, size_t arena_count);
+
+void writeChunk(ArenaManager *manager, Chunk *chunk, uint8_t byte, size_t line);
+
+#endif

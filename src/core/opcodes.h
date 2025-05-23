@@ -1,7 +1,7 @@
 /* This program is free software: you can redistribute it and/or modify
 /* it under the terms of the GNU General Public License as published by
 /* the Free Software Foundation, either version 3 of the License, or
-/* (at your option) any later version.
+/* any later version.
 /* 
 /* This program is distributed in the hope that it will be useful,
 /* but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -13,18 +13,29 @@
 /* 
 /* Copyright (c) 2025 Guillermo Leira Temes
 /* */
-#define ANSI_C
-#include "common/common.h"
-#include "core/core.h"
 
+#ifndef ZYNK_OPCODES
+#define ZYNK_OPCODES
 
+typedef enum {
+    OP_CONSTANT,
+    OP_RETURN,
+    OP_NEGATE,
+    OP_ADD,
+    OP_SUBSTRACT,
+    OP_MULTIPLY,
+    OP_DIVIDE,
+    OP_TRUE,
+    OP_FALSE,
+    OP_NULL,
+    OP_EQUAL,
+    OP_GREATER,
+    OP_LESS,
+    OP_BYTE,
+    OP_STRING,
+    OP_DUPE,
+    OP_DEL,
+    OP_BACKDEL,
+} OpCode;
 
-int main(int argc, const char* argv[]){
-    Chunk chunk;
-    init_sys();
-    init_chunk(&chunk);
-    writeChunk(&chunk, OP_RETURN);
-    disassemble_chunk(&chunk, "My HandCrafted Chunk");
-    reallocate_block(chunk.code, chunk.capacity, 0);
-    return 0;
-}
+#endif

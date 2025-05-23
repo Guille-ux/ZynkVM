@@ -43,7 +43,7 @@ static inline bool isObjType(Value value, ObjType type) {
 }
 
 void initArray(ValueArray *array) {
-    array->values=(uint8_t *)null;
+    array->values=(Value *)null;
     array->count=0;
     array->capacity=0;
 }
@@ -70,7 +70,7 @@ void freeArray(ArenaManager *manager, ValueArray *array) {
 
 #ifndef STANDALONE
 void printVal(Value val) {
-    printf("%g", val);
+    printf("%g", AS_NUMBER(val));
 }
 
 void printZynkObject(Value value) {

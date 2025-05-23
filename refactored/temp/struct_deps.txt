@@ -1,0 +1,68 @@
+./hdebug/hash_debug.c:typedef struct {
+./assembler/zasm.h:typedef struct {
+./core/chunk.h:struct Chunk { //oh algo dinámico
+./core/vm.c:        disassemble_instruction(vm->chunk, (size_t)(vm->ip-vm->chunk->code));
+./core/vm.c:        uint8_t instruction;
+./core/vm.c:        switch (instruction=READ()) {
+./core/debug.h:size_t simple_instruction(const char *name, size_t offset);
+./core/debug.h:size_t constant_instruction(const char *name, Chunk *chunk, size_t offset);
+./core/debug.h:int disassemble_instruction(Chunk* chunk, size_t offset);
+./core/debug.h://template para añadir más cosas:         case OP_DIVIDE: return simple_instruction("OP_DIVIDE", offset);
+./core/hash.h:struct Entry{
+./core/hash.h:    struct Value value;
+./core/hash.h:struct Table {
+./core/hash.h:bool tableSet(ArenaManager *manager, Table *table, struct Value a, const char name[8]);
+./core/hash.h:bool tableGet(ArenaManager *manager, Table *table, const char so[8], struct Value *value);
+./core/types/base.h:struct Obj;
+./core/types/base.h:struct ObjString;
+./core/types/base.h:struct Value;
+./core/types/base.h:struct Chunk;
+./core/types/base.h:struct ZynkVM;
+./core/types/base.h:struct Table;
+./core/types/base.h:struct ValueArray;
+./core/types/base.h:struct Entry;
+./core/types/base.h:struct ArenaManager;
+./core/types/base.h:typedef struct Obj Obj;
+./core/types/base.h:typedef struct ObjString ObjString;
+./core/types/base.h:typedef struct Value Value;
+./core/types/base.h:typedef struct ValueArray ValueArray;
+./core/types/base.h:typedef struct Chunk Chunk;
+./core/types/base.h:typedef struct ZynkVM ZynkVM;
+./core/types/base.h:typedef struct Table Table;
+./core/types/base.h:typedef struct Entry Entry;
+./core/types/base.h:typedef struct ArenaManager ArenaManager;
+./core/types/object.h:struct Obj {
+./core/types/object.h:    struct Obj* next;
+./core/types/object.h:struct ObjString {
+./core/types/value.h:struct Value {
+./core/types/value.h:struct ValueArray {
+./core/vm.h:struct ZynkVM {
+./core/vm.h:    struct Chunk* chunk;
+./core/vm.h:    uint8_t *ip; // ip means instruction pointer
+./core/vm.h:    struct Value stack[STACK_MAX];
+./core/debug.c:size_t simple_instruction(const char *name, size_t offset) {
+./core/debug.c:size_t constant_instruction(const char *name, Chunk *chunk, size_t offset) {
+./core/debug.c:int disassemble_instruction(Chunk* chunk, size_t offset) {
+./core/debug.c:    uint8_t instruction=chunk->code[offset];
+./core/debug.c:    switch (instruction) {
+./core/debug.c:        case OP_RETURN: return simple_instruction("OP_RETURN", offset);
+./core/debug.c:        case OP_CONSTANT: return constant_instruction("OP_CONSTANT", chunk, offset);
+./core/debug.c:        case OP_NEGATE: return simple_instruction("OP_NEGATE", offset);
+./core/debug.c:        case OP_ADD: return simple_instruction("OP_ADD", offset);
+./core/debug.c:        case OP_SUBSTRACT: return simple_instruction("OP_SUBSTRACT", offset);
+./core/debug.c:        case OP_MULTIPLY: return simple_instruction("OP_MULTIPLY", offset);
+./core/debug.c:        case OP_DIVIDE: return simple_instruction("OP_DIVIDE", offset);
+./core/debug.c:        case OP_TRUE: return simple_instruction("OP_TRUE", offset);
+./core/debug.c:        case OP_FALSE: return simple_instruction("OP_FALSE", offset);
+./core/debug.c:        case OP_NULL: return simple_instruction("OP_NULL", offset);
+./core/debug.c:        case OP_GREATER: return simple_instruction("OP_GREATER", offset);
+./core/debug.c:        case OP_LESS: return simple_instruction("OP_LESS", offset);
+./core/debug.c:        case OP_EQUAL: return simple_instruction("OP_EQUAL", offset);
+./core/debug.c:        case OP_DUPE: return simple_instruction("OP_DUPE", offset);
+./core/debug.c:        case OP_DEL: return simple_instruction("OP_DEL", offset);
+./core/debug.c:        case OP_BACKDEL: return simple_instruction("OP_BACKDEL", offset);
+./core/debug.c:        case OP_STRING: return simple_instruction("OP_STRING", offset);
+./core/debug.c:            printf("Unknown Instruction OpCode '%d'\n", instruction);
+./core/debug.c:    printf("%d Instruction/s\n", (int)chunk->count);
+./core/debug.c:        offset=disassemble_instruction(chunk, offset);
+./main.c:#include "core/types/value.h"       // Luego las estructuras de valor

@@ -26,7 +26,7 @@ void free_chunk(ArenaManager *manager, Chunk *chunk);
 
 size_t addConstant(ArenaManager *manager, Chunk *chunk, Value value);
 
-void cinit_sys(ArenaManager manager, uint8_t *memoryl, Arena *arenis, size_t size, size_t arena_count);
+void cinit_sys(ArenaManager *manager, uint8_t *memoryl, Arena *arenis, size_t size, size_t arena_count);
 
 void writeChunk(ArenaManager *manager, Chunk *chunk, uint8_t byte, size_t line);
 

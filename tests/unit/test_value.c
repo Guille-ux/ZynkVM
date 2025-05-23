@@ -12,13 +12,15 @@
 // ADDED: Include for init_sys declaration
 #include "../../.conduitpkg/sysarena/src/include/sysarena.h"
 
+extern Arena arenas[];
+extern uint8_t memory[];
+extern ArenaManager manager;
+
 // Static global for ArenaManager, initialized in setUp
-Arena arenas[ARENA_COUNT];
-uint8_t memory[MEM_SIZE];
-ArenaManager manager;
+
 
 void setUp(void) {
-    init_sys(&manager);
+    cinit_sys(&manager, memory, arenas, MEM_SIZE, ARENA_COUNT);
 }
 
 void tearDown(void) {

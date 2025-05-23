@@ -13,6 +13,7 @@
         "tmem.h": "c",
         "sysarena.h": "c",
         "value.h": "c",
-        "opcodes.h": "c"
+        "opcodes.h": "c",
+        "unity.h": "c"
     }
 }

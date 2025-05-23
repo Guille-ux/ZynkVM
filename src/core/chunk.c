@@ -36,8 +36,8 @@ size_t addConstant(ArenaManager *manager, Chunk *chunk, Value value) {
     return chunk->constants.count - 1;
 }
 
-void cinit_sys(ArenaManager manager, uint8_t *memoryl, Arena *arenis, size_t size, size_t arena_count) {
-    sysarena_init(&manager, memoryl, arenis, size, arena_count);
+void cinit_sys(ArenaManager *manager, uint8_t *memoryl, Arena *arenis, size_t size, size_t arena_count) {
+    sysarena_init(manager, memoryl, arenis, size, arena_count);
 }
 
 void writeChunk(ArenaManager *manager, Chunk *chunk, uint8_t byte, size_t line) {

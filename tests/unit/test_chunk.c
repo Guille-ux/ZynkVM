@@ -12,14 +12,14 @@
 // ADDED: Include for init_sys declaration
 #include "../../.conduitpkg/sysarena/src/include/sysarena.h"
 
-Arena arenas[ARENA_COUNT];
-uint8_t memory[MEM_SIZE];
-ArenaManager manager;
-
 // REMOVED: static Chunk chunk; and static ArenaManager manager;
 // REMOVED: setUp() and tearDown() functions from here.
 // These are managed by test_value.c's main setUp/tearDown for the unified runner.
 // The 'manager' variable will be accessible if it's truly global (defined in test_value.c).
+
+extern Arena arenas[];
+extern uint8_t memory[];
+extern ArenaManager manager;
 
 void test_chunk_initialization(void) {
     Chunk test_chunk; // Use a local chunk for isolation

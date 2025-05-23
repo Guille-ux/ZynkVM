@@ -7,11 +7,18 @@
 #ifndef UNITY_H
 #define UNITY_H
 
-#include <stddef.h>
 #include <stdio.h>
 #include <math.h>
 #include <string.h> // Added for strcmp, based on your previous output
+#include "../../.conduitpkg/sysarena/src/include/sysarena.h"
+#include "../../src/core/chunk.h"
+#include "../../src/core/value.h"
+#include "../../src/common.h"
+#include "../../src/core/opcodes.h"
 
+extern Arena arenas[ARENA_COUNT];
+extern uint8_t memory[MEM_SIZE];
+extern ArenaManager manager;
 
 // Tipos de datos para los tests
 typedef signed char INT8;

@@ -35,7 +35,7 @@ char stringcmp(String a, String b);
 
 String ztok(const char *str, char ch, size_t index);
 
-void translate_linez(const char *line, uint8_t *code, Value *constants, size_t *code_index, size_t *constants_index);
+void translate_linez(const char *line, uint8_t *code_index, Value *constants_index);
 
 #endif
 

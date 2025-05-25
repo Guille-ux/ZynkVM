@@ -18,7 +18,7 @@
 
 size_t zlen(const char *str, char sym) {
     size_t count=0;
-    for (;*str!=sym||*str!='\0';str++) {
+    for (;*str!=sym&&*str!='\0';str++) {
         count++;
     }
     return count;
@@ -63,29 +63,29 @@ double str2double(const char *text) {
 
 char zcmp(const char *a, const char *b, char sym) {
     if (zlen(a, sym)!=zlen(b, sym)) {
-        return false;
+        return FALSE;
     }
     for (size_t i=0;i<zlen(a, sym);i++) {
         if (*a!=*b) {
-            return false;
+            return FALSE;
         }
         a++;
         b++;
     }
-    return true;
+    return TRUE;
 }
 
 char stringcmp(String a, String b) {
     if (a.len!=b.len) {
-        return false;
+        return FALSE;
     }
     for (size_t i=0;i<a.len;i++) {
         if (a.str[i]!=b.str[i]) {
-            return false;
+            return FALSE;
         }
 
     }
-    return true;
+    return TRUE;
 }
 
 String ztok(const char *str, char ch, size_t index) {
@@ -104,45 +104,48 @@ String ztok(const char *str, char ch, size_t index) {
     return ret;
 }
 
-void translate_linez(const char *line, uint8_t *code, Value *constants, size_t *code_index, size_t *constants_index) {
+void translate_linez(const char *line, uint8_t *code_index, Value *constants_index) {
     if (zcmp(line, "CONSTANT;", ';')) {
-        code[*code_index] = OP_CONSTANT;
+        *code_index = OP_CONSTANT;
     } else if (zcmp(line, "ADD;", ';')) {
-        code[*code_index] = OP_ADD;
+        *code_index = OP_ADD;
     } else if (zcmp(line, "SUBSTRACT;", ';')) {
-        code[*code_index] = OP_SUBSTRACT;
+        *code_index = OP_SUBSTRACT;
     } else if (zcmp(line, "MULTIPLY;", ';')) {
-        code[*code_index] = OP_MULTIPLY;
+        *code_index = OP_MULTIPLY;
     } else if (zcmp(line, "DIVIDE;", ';')) {
-        code[*code_index] = OP_DIVIDE;
+        *code_index = OP_DIVIDE;
     } else if (zcmp(line, "RETURN;", ';')) {
-        code[*code_index] = OP_RETURN;
+        *code_index = OP_RETURN;
     } else if(zcmp(line, "NEGATE;", ';')) {
-        code[*code_index] = OP_NEGATE;
+        *code_index = OP_NEGATE;
     } else if (zcmp(line, "TRUE;", ';')) {
-        code[*code_index] = OP_TRUE;
+        *code_index = OP_TRUE;
     } else if (zcmp(line, "FALSE;", ';')) {
-        code[*code_index] = OP_FALSE;
+        *code_index = OP_FALSE;
     } else if (zcmp(line, "NULL;", ';')) {
-        code[*code_index] = OP_NULL;
+        *code_index = OP_NULL;
     } else if (zcmp(line, "EQUAL;", ';')) {
-        code[*code_index] = OP_EQUAL;
+        *code_index = OP_EQUAL;
     } else if (zcmp(line, "GREATER;", ';')) {
-        code[*code_index] = OP_GREATER;
+        *code_index = OP_GREATER;
     } else if (zcmp(line, "LESS;", ';')) {
-        code[*code_index] = OP_LESS;
+        *code_index = OP_LESS;
     } else if (zcmp(line, "BYTE;", ';')) {
-        code[*code_index] = OP_BYTE;
+        *code_index = OP_BYTE;
     } else if (zcmp(line, "DEL;", ';')) {
-        code[*code_index] = OP_DEL;
+        *code_index = OP_DEL;
     } else if (zcmp(line, "DUPE;", ';')) {
-        code[*code_index] = OP_DUPE;
+        *code_index = OP_DUPE;
     } else if (zcmp(line, "BACKDEL;", ';')) {
-        code[*code_index] = OP_BACKDEL;
+        *code_index = OP_BACKDEL;
     } else if (line[0]=='b') {
-        code[*code_index]=line[1];
+        *code_index=line[1];
+    } else if (line[0]=='n') {
+        code_index--;
+        constants_index++;
     } else {
-        *code_index--;
+        code_index--;
     }
-    *code_index++;
+    code_index++;
 }

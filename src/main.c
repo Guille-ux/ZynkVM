@@ -14,8 +14,16 @@
 /* Copyright (c) 2025 Guillermo Leira Temes
 /* */
 
+#define DEBUG
+
 #include <stdio.h>
 #include "common.h"
+#include "core/value.h"
+#include "core/vm.h"
+#include "core/tmem.h"
+#include "core/opcodes.h"
+#include "core/chunk.h"
+#include "zasm/zasm.h"
 
 #define VERSION "0.0.1"
 
@@ -23,7 +31,25 @@ Arena arenas[ARENA_COUNT];
 uint8_t memory[MEM_SIZE];
 ArenaManager manager;
 
-int main() {
-    printf("[------------------------ ZynkVM %s -------------------------] \n ", VERSION);
+int add_test() {
+    uint8_t *code_buffer=(uint8_t *)sysarena_alloc(&manager, 512);
+    Value *value_buffer=(Value *)sysarena_alloc(&manager, 256*sizeof(Value));
+    translate_linez("CONSTANT;", code_buffer, value_buffer);
+    translate_linez("10", code_buffer, value_buffer);
+    translate_linez("CONSTANT;", code_buffer, value_buffer);
+    translate_linez("2", code_buffer, value_buffer);
+    translate_linez("ADD;", code_buffer, value_buffer);
+    Chunk chunk;
+    load_chunk(&manager, code_buffer, value_buffer, &chunk, 5);
+
     return 0;
 }
+
+int main(int argc, const char argv[]) {
+    sysarena_init(&manager, memory, arenas, MEM_SIZE, ARENA_COUNT);
+    printf("[------------------------ ZynkVM %s -------------------------] \n", VERSION);
+    printf("[-------------------------- TESTING ----------------------------] \n");
+    add_test();
+    return 0;
+}
+

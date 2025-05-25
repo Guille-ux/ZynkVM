@@ -17,6 +17,10 @@
 #include "vm.h"
 #include "value.h"
 
+#ifndef STANDALONE
+#include <stdio.h>
+#endif
+
 void load_chunk(ArenaManager *manager, uint8_t *code, Value *constants, Chunk *chunk, size_t len) {
     init_chunk(chunk);
     for (size_t i=0;i<len;i++) {
@@ -97,6 +101,7 @@ ZynkResult run(ArenaManager *manager, ZynkVM *vm) {
 
     for (;;) { //anything useful
 #ifdef DEBUG
+#include <stdio.h>
         printf("\t");
         for (Value* slot=vm->stack; slot<vm->stackTop; slot++) {
             printf("[ ");

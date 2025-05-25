@@ -17,8 +17,13 @@
 #ifndef ZYNK_COMMON_H
 #define ZYNK_COMMON_H
 
+#ifndef STANDALONE
+#include <stdio.h>
+#endif
+
 #include "../.conduitpkg/sysarena/src/include/types.h"
 #include "../.conduitpkg/sysarena/src/include/sysarena.h"
+#include "core/tmem.h"
 
 #define EIGHT_TO_SIZE sizeof(size_t)
 #define INITIAL 8 //cuando le falte memoria añadira uno más, asi gastare menos

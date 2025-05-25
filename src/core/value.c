@@ -16,6 +16,10 @@
 
 #include "value.h"
 
+#ifndef STANDALONE
+#include <stdio.h>
+#endif
+
 static Obj* allocateObj(ZynkVM *vm, ArenaManager *manager, size_t size, ObjType ot) {
     Obj* object = (Obj *)reallocate(manager, NULL, 0, size);
     object->type = ot;
@@ -33,7 +37,7 @@ ObjString* allocateStr(ZynkVM *vm, ArenaManager *manager, char *chars, uint32_t 
 
 ObjString* cpyString(ZynkVM *vm, ArenaManager *manager, const char *chars, uint32_t length) {
     char *heapChars = (char *)reallocate(manager, NULL, 0, sizeof(char)*(length+1));
-    tmemcpy(heapChars, chars, length);
+    tmemcpy(heapChars, (uint8_t *)chars, length);
     heapChars[length] = '\0';
     return allocateStr(vm, manager, heapChars, length);
 }

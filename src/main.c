@@ -14,12 +14,16 @@
 /* Copyright (c) 2025 Guillermo Leira Temes
 /* */
 
+#include <stdio.h>
 #include "common.h"
+
+#define VERSION "0.0.1"
 
 Arena arenas[ARENA_COUNT];
 uint8_t memory[MEM_SIZE];
 ArenaManager manager;
 
-int main(int argc, const char *argv[]) {
+int main() {
+    printf("[------------------------ ZynkVM %s -------------------------] \n ", VERSION);
     return 0;
 }

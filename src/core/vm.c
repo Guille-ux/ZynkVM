@@ -40,14 +40,20 @@ void load_chunk(ArenaManager *manager, uint8_t *code, Value *constants, Chunk *c
             size_t index = addConstant(manager, chunk, constants[chunk->constants.count]);
             uint8_t tmp[sizeof(common_size)];
 #ifndef BIG_ENDIAN
-            storeSizeIn8LEndian((common_size *)&chunk->constants.values[index], tmp);
+            storeSizeIn8LEndian((common_size *)&index, tmp);
 #else
-            storeSizeIn8BEndian((common_size *)&chunk->constants.values[index], tmp);
+            storeSizeIn8BEndian((common_size *)&index, tmp);
+#endif
+#ifndef STANDALONE
+	    printf("[Conversion Succesful]\n");
 #endif
             for (char z=0;z<sizeof(common_size);z++) {
-                writeChunk(manager, chunk, tmp[z], i);
+                writeChunk(manager, chunk, tmp[z], i+z);
+		i++;
             }
-	    i+=8;
+#ifndef STANDALONE
+	    printf("[NUMBER ADDED]\n");
+#endif
         }
 	i++;
     }

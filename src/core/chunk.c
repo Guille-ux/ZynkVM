@@ -15,6 +15,7 @@
 /* */
 
 #include "chunk.h"
+#include <stdio.h>
 
 void init_chunk(Chunk *chunk) { 
     chunk->count=0;
@@ -46,21 +47,19 @@ void writeChunk(ArenaManager *manager, Chunk *chunk, uint8_t byte, size_t line) 
         uint8_t *new_code = NULL;
 
         if (old == 0) {
-            new_code = sysarena_alloc(manager, INITIAL);
-            chunk->lines = reallocate(manager, chunk->lines, old, sizeof(int)*INITIAL);
+            new_code = (uint8_t *)sysarena_alloc(manager, INITIAL);
             chunk->capacity = INITIAL;
         } else {
-            new_code = sysarena_alloc(manager, old * GROW_FACTOR);
-            chunk->lines = reallocate(manager, chunk->lines, old, old*GROW_FACTOR);
-            tmemcpy(new_code, chunk->code, old);
+	    printf("BEFORE\n");
+            new_code = (uint8_t *)sysarena_alloc(manager, old * GROW_FACTOR);
+	    tmemcpy(new_code, chunk->code, old);
+	    printf("AFTER\n");
             chunk->capacity *= GROW_FACTOR;
         }
-
         sysarena_free(manager, chunk->code);
 	chunk->code=new_code;
     }
 
-    chunk->lines[chunk->count]=line;
     chunk->code[chunk->count]=byte;
     chunk->count++;
 }

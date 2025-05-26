@@ -36,7 +36,7 @@ int add_test() {
     uint8_t *code_buffer=(uint8_t *)sysarena_alloc(&manager, 512);
     Value *value_buffer=(Value *)sysarena_alloc(&manager, 256*sizeof(Value));
     translate_linez("ADD;", code_buffer, value_buffer);
-    translate_linez("2", code_buffer, value_buffer);
+    translate_linez("10", code_buffer, value_buffer);
     translate_linez("CONSTANT;", code_buffer, value_buffer);
     translate_linez("10", code_buffer, value_buffer);
     translate_linez("CONSTANT;", code_buffer, value_buffer);

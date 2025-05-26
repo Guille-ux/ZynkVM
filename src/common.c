@@ -22,7 +22,11 @@ void *reallocate(ArenaManager *manager, void *pointer, size_t old_size, size_t n
         return NULL;
     }
     uint8_t *reallocated = sysarena_alloc(manager, new_size);
-    tmemcpy(reallocated, (uint8_t *)pointer, old_size);
+    if (old_size==0) {
+    	
+    } else {
+    	tmemcpy(reallocated, (uint8_t *)pointer, old_size);
+    }
     sysarena_free(manager, pointer);
     return (ptr_t)reallocated;
 }

@@ -1,0 +1,70 @@
+/* This program is free software: you can redistribute it and/or modify
+/* it under the terms of the GNU General Public License as published by
+/* the Free Software Foundation, either version 3 of the License, or
+/* (at your option) any later version.
+/* 
+/* This program is distributed in the hope that it will be useful,
+/* but WITHOUT ANY WARRANTY; without even the implied warranty of
+/* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+/* GNU General Public License for more details.
+/* 
+/* You should have received a copy of the GNU General Public License
+/* along with this program. If not, see <https://www.gnu.org/licenses/>.
+/* 
+/* Copyright (c) 2025 Guillermo Leira Temes
+/* */
+
+#include "debug.h"
+
+#ifndef STANDALONE
+
+size_t simple_instruction(const char *name, size_t offset) {
+    printf(" : %s\n", name);
+    return offset + 1;
+}
+
+size_t constant_instruction(const char *name, Chunk *chunk, size_t offset) {
+    uint8_t constant = chunk->code[offset+1];
+    printf("%-16s %4d '", name, constant);
+    printVal(chunk->constants.values[constant]);
+    return offset + 2;
+}
+
+int disassemble_instruction(Chunk* chunk, size_t offset) {
+    printf("%04d", (int)offset);
+    uint8_t instruction=chunk->code[offset];
+    switch (instruction) {
+        case OP_RETURN: return simple_instruction("OP_RETURN", offset);
+        case OP_CONSTANT: return constant_instruction("OP_CONSTANT", chunk, offset);
+        case OP_NEGATE: return simple_instruction("OP_NEGATE", offset);
+        case OP_ADD: return simple_instruction("OP_ADD", offset);
+        case OP_SUBSTRACT: return simple_instruction("OP_SUBSTRACT", offset);
+        case OP_MULTIPLY: return simple_instruction("OP_MULTIPLY", offset);
+        case OP_DIVIDE: return simple_instruction("OP_DIVIDE", offset);
+        case OP_TRUE: return simple_instruction("OP_TRUE", offset);
+        case OP_FALSE: return simple_instruction("OP_FALSE", offset);
+        case OP_NULL: return simple_instruction("OP_NULL", offset);
+        case OP_GREATER: return simple_instruction("OP_GREATER", offset);
+        case OP_LESS: return simple_instruction("OP_LESS", offset);
+        case OP_EQUAL: return simple_instruction("OP_EQUAL", offset);
+        case OP_DUPE: return simple_instruction("OP_DUPE", offset);
+        case OP_DEL: return simple_instruction("OP_DEL", offset);
+        case OP_BACKDEL: return simple_instruction("OP_BACKDEL", offset);
+        case OP_STRING: return simple_instruction("OP_STRING", offset);
+        default:
+            printf("Unknown Instruction OpCode '%d'\n", instruction);
+            return offset + 1;
+    }
+}
+
+void disassemble_chunk(Chunk *chunk, const char * name) {
+    printf("[+] == %s == [+] \n", name);
+    printf("%d Instruction/s\n", (int)chunk->count);
+    for (int offset=0;offset<chunk->count;) {
+        offset=disassemble_instruction(chunk, offset);
+    }
+}
+
+#else
+// Implementación alternativa para Munix aquí si la necesitas
+#endif

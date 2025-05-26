@@ -19,24 +19,37 @@
 
 #ifndef STANDALONE
 #include <stdio.h>
+#include "debug.h"
 #endif
+
 
 void load_chunk(ArenaManager *manager, uint8_t *code, Value *constants, Chunk *chunk, size_t len) {
     init_chunk(chunk);
-    for (size_t i=0;i<len;i++) {
+    for (size_t i=0;i<len;) {
+#ifndef STANDALONE
+	printf("[LOADING INSTRUCTION NUMBER %d...]\n", i);
+	printf("[DATA] [CONSTANT INDEX %d] [INSTRUCTION CODE %d]\n", chunk->constants.count, code[i]);
+	switch (code[i]) {
+		case OP_RETURN: printf("OP_RETURN\n"); break; 
+		case OP_CONSTANT: printf("OP_CONSTANT\n"); break;
+		default: printf("Unknown Instruction\n"); break;
+	}
+#endif
         writeChunk(manager, chunk, code[i], i);
         if (code[i]==OP_CONSTANT) {
             size_t index = addConstant(manager, chunk, constants[chunk->constants.count]);
             uint8_t tmp[sizeof(common_size)];
 #ifndef BIG_ENDIAN
-            storeSizeIn8LEndian((common_size *)index, tmp);
+            storeSizeIn8LEndian((common_size *)&chunk->constants.values[index], tmp);
 #else
-            storeSizeIn8BEndian((common_size *)index, tmp);
+            storeSizeIn8BEndian((common_size *)&chunk->constants.values[index], tmp);
 #endif
             for (char z=0;z<sizeof(common_size);z++) {
                 writeChunk(manager, chunk, tmp[z], i);
             }
+	    i+=8;
         }
+	i++;
     }
 }
 
@@ -196,7 +209,7 @@ ZynkResult run(ArenaManager *manager, ZynkVM *vm) {
             }
             case OP_STRING: {
                 uint32_t length = (uint32_t)(AS_NUMBER(pop(vm)));
-                Value str = OBJ_VAL(cpyString(manager, (const char *)READ(), length, TRUE));
+                Value str = OBJ_VAL(cpyString(vm, manager, (const char *)READ(), length));
                 push(vm, str);
                 for (uint32_t i=1;i<length;i++) {
                     READ();

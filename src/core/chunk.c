@@ -47,7 +47,7 @@ void writeChunk(ArenaManager *manager, Chunk *chunk, uint8_t byte, size_t line) 
 
         if (old == 0) {
             new_code = sysarena_alloc(manager, INITIAL);
-            chunk->lines = reallocate(manager, chunk->lines, old, INITIAL);
+            chunk->lines = reallocate(manager, chunk->lines, old, sizeof(int)*INITIAL);
             chunk->capacity = INITIAL;
         } else {
             new_code = sysarena_alloc(manager, old * GROW_FACTOR);
@@ -56,8 +56,8 @@ void writeChunk(ArenaManager *manager, Chunk *chunk, uint8_t byte, size_t line) 
             chunk->capacity *= GROW_FACTOR;
         }
 
-        chunk->code = new_code;
         sysarena_free(manager, chunk->code);
+	chunk->code=new_code;
     }
 
     chunk->lines[chunk->count]=line;

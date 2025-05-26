@@ -26,6 +26,7 @@
 #include "zasm/zasm.h"
 
 #define VERSION "0.0.1"
+#define DEBUG
 
 Arena arenas[ARENA_COUNT];
 uint8_t memory[MEM_SIZE];
@@ -34,13 +35,13 @@ ArenaManager manager;
 int add_test() {
     uint8_t *code_buffer=(uint8_t *)sysarena_alloc(&manager, 512);
     Value *value_buffer=(Value *)sysarena_alloc(&manager, 256*sizeof(Value));
+    translate_linez("ADD;", code_buffer, value_buffer);
+    translate_linez("2", code_buffer, value_buffer);
     translate_linez("CONSTANT;", code_buffer, value_buffer);
     translate_linez("10", code_buffer, value_buffer);
     translate_linez("CONSTANT;", code_buffer, value_buffer);
-    translate_linez("2", code_buffer, value_buffer);
-    translate_linez("ADD;", code_buffer, value_buffer);
     Chunk chunk;
-    load_chunk(&manager, code_buffer, value_buffer, &chunk, 5);
+    load_chunk(&manager, code_buffer, value_buffer, &chunk, 512);
 
     return 0;
 }

@@ -53,15 +53,21 @@ void initArray(ValueArray *array) {
 }
 
 void writeArray(ArenaManager *manager, ValueArray *array, Value value) {
-    if (array->capacity < array->count + 1) {
+    if (array->capacity < (array->count + 1)) {
         size_t old_cap = array->capacity;
+	Value *new_val=(Value *)NULL;
+
         if (old_cap==0) {
-            array->values=reallocate(manager, array->values, old_cap, INITIAL);
+            new_val=(Value *)sysarena_alloc(manager, sizeof(Value)*INITIAL);
             array->capacity=INITIAL;
         } else {
             size_t new_cap = old_cap*GROW_FACTOR;
-            array->values=reallocate(manager, array->values, old_cap, new_cap);
-        }
+            new_val=sysarena_alloc(manager, new_cap*sizeof(Value));
+	    tmemcpy((uint8_t *)new_val, (uint8_t *)array->values, old_cap*sizeof(Value));
+            array->capacity=new_cap;
+	}
+	sysarena_free(manager, array->values);
+	array->values=new_val;
     }
     array->values[array->count] = value;
     array->count++;

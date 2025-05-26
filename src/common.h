@@ -35,7 +35,7 @@
 #define GROW_FACTOR 2
 #define STACK_MAX 1024*1024 //limite actual del stack creo que 1M es suficiente de momento, en el futuro sera usando sysarena
 
-typedef uint32_t common_size;
+typedef size_t common_size;
 
 void *reallocate(ArenaManager *manager, void *pointer, size_t old_size, size_t new_size);
 

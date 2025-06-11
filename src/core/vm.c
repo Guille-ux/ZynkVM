@@ -27,7 +27,7 @@ void load_chunk(ArenaManager *manager, uint8_t *code, Value *constants, Chunk *c
     init_chunk(chunk);
     for (size_t i=0;i<len;) {
 #ifndef STANDALONE
-	printf("[LOADING INSTRUCTION NUMBER %d...]\n", i);
+	printf("[LOADING INSTRUCTION NUMBER %ld...]\n", i);
 	printf("[DATA] [CONSTANT INDEX %d] [INSTRUCTION CODE %d]\n", chunk->constants.count, code[i]);
 	switch (code[i]) {
 		case OP_RETURN: printf("OP_RETURN\n"); break; 
@@ -63,15 +63,15 @@ Value compareVals(Value a, Value b) {
     if (SAME_TYPE(a, b)) {
         if (IS_BOOL(a)) {
             if (AS_BOOL(a)==AS_BOOL(b)) {
-                return BOOL_VAL(TRUE);
+                return BOOL_VAL(true);
             } else {
-                return BOOL_VAL(FALSE);
+                return BOOL_VAL(false);
             }
         } else if (IS_NUMBER(a)) {
             if (AS_NUMBER(a)==AS_NUMBER(b)) {
-                return BOOL_VAL(TRUE);
+                return BOOL_VAL(true);
             } else {
-                return BOOL_VAL(FALSE);
+                return BOOL_VAL(false);
             }
         } else if (IS_STRING(a)) {
             return BOOL_VAL(fmemcmp((uint8_t *)AS_CSTRING(a), (uint8_t *)AS_CSTRING(b), AS_STRING(a)->length, AS_STRING(b)->length));
@@ -79,7 +79,7 @@ Value compareVals(Value a, Value b) {
             // runtimeError (Unknown Type)
         }
     } else {
-        return BOOL_VAL(FALSE);
+        return BOOL_VAL(false);
     }
 }
 
@@ -116,7 +116,7 @@ ZynkResult run(ArenaManager *manager, ZynkVM *vm) {
                     a.as.number=AS_NUMBER(a) op AS_NUMBER(b); \
                 } \
             } \
-    } while (FALSE);
+    } while (false);
 
     for (;;) { //anything useful
 #ifdef DEBUG
@@ -149,10 +149,10 @@ ZynkResult run(ArenaManager *manager, ZynkVM *vm) {
                 if (IS_NUMBER(val)) {
                     val.as.number=-AS_NUMBER(val);
                 } else if (IS_BOOL(val)) {
-                    if (AS_BOOL(val)==TRUE) {
-                        val.as.boolean=FALSE;
+                    if (AS_BOOL(val)==true) {
+                        val.as.boolean=false;
                     } else {
-                        val.as.boolean=TRUE;
+                        val.as.boolean=true;
                     }
                 } else {
                     //runtimeError();
@@ -181,11 +181,11 @@ ZynkResult run(ArenaManager *manager, ZynkVM *vm) {
                 break;
             }
             case OP_TRUE: {
-                push(vm, BOOL_VAL(TRUE));
+                push(vm, BOOL_VAL(true));
                 break;
             }
             case OP_FALSE: {
-                push(vm, BOOL_VAL(FALSE));
+                push(vm, BOOL_VAL(false));
                 break;
             }
             case OP_EQUAL: {

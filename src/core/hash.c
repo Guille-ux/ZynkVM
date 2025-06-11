@@ -32,25 +32,25 @@ bool tableSet(ArenaManager *manager, Table *table, Value a, const char name[8]) 
     uint32_t key_hash=hash8Str(name);
     uint32_t index = key_hash % table->capacity;
     if (table->capacity <= table->count) {
-        return FALSE; //thre isn't enough memory free
+        return false; //thre isn't enough memory free
     }
     for (;;index = (index + 1) % table->capacity) {
         if (table->entries[index].free) {
             table->entries[index].hash=key_hash;
-            table->entries[index].free=FALSE;
+            table->entries[index].free=false;
             table->entries[index].value = a;
             table->count++;
             break;
         } if (((index+1)%table->capacity)==index-1) {
-            return FALSE;
+            return false;
         }
     }
-    return FALSE;
+    return false;
 }
 
 bool tableGet(ArenaManager *manager, Table *table, const char so[8], Value *value) {
     if (table->capacity <= table->count) {
-        return FALSE; //thre isn't enough memory free
+        return false; //thre isn't enough memory free
     }
     uint32_t key_hash=hash8Str(so);
     uint32_t index = key_hash % table->capacity;
@@ -59,30 +59,30 @@ bool tableGet(ArenaManager *manager, Table *table, const char so[8], Value *valu
             value = &table->entries[index].value;
             break;
         } if (((index+1)%table->capacity)==index-1) {
-            return FALSE;
+            return false;
         }
     }
-    return TRUE;
+    return true;
 }
 
 bool tableDelete(ArenaManager *manager, Table *table, const char so[8]) {
     uint32_t key_hash=hash8Str(so);
     uint32_t index = key_hash % table->capacity;
     if (table->entries[index].free) {
-        return FALSE;
+        return false;
     }
     table->entries[index].hash=(uint32_t)NULL;
-    table->entries[index].free=TRUE;
+    table->entries[index].free=true;
     table->entries[index].value = NULL_VAL;
     table->count--;
-    return TRUE;
+    return true;
 }
 
 void reAdjustTableCapacity(ArenaManager *manager, Table *table, uint32_t capacity) {
     table->entries=(Entry *)reallocate(manager, table->entries, table->capacity, capacity);
     for (uint32_t i=table->capacity;i<capacity;i++) {
         table->entries[i].hash=(uint32_t)NULL;
-        table->entries[i].free=TRUE;
+        table->entries[i].free=true;
         table->entries[i].value=NULL_VAL;
     }
     table->capacity=capacity;
@@ -92,13 +92,13 @@ void initTableCapacity(ArenaManager *manager, Table *table, uint32_t capacity) {
     table->entries=(Entry *)reallocate(manager, table->entries, table->capacity, capacity);
     for (uint32_t i=0;i<capacity;i++) {
         table->entries[i].hash=(uint32_t)NULL;
-        table->entries[i].free=TRUE;
+        table->entries[i].free=true;
         table->entries[i].value=NULL_VAL;
     }
     table->capacity=capacity;
 }
 
-uint32_t hash8Str(char *str) {
+uint32_t hash8Str(const char *str) {
     uint32_t hash=0;
     for (char i=0;i<8;i++) {
         hash ^= (uint8_t)str[i];

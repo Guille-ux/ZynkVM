@@ -42,7 +42,8 @@ int add_test() {
     translate_linez("CONSTANT;", code_buffer, value_buffer);
     Chunk chunk;
     load_chunk(&manager, code_buffer, value_buffer, &chunk, 512);
-
+    ZynkVM machine;
+    zynk_interpret(&manager, &machine, &chunk);
     return 0;
 }
 

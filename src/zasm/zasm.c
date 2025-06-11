@@ -63,29 +63,29 @@ double str2double(const char *text) {
 
 char zcmp(const char *a, const char *b, char sym) {
     if (zlen(a, sym)!=zlen(b, sym)) {
-        return FALSE;
+        return false;
     }
     for (size_t i=0;i<zlen(a, sym);i++) {
         if (*a!=*b) {
-            return FALSE;
+            return false;
         }
         a++;
         b++;
     }
-    return TRUE;
+    return false;
 }
 
 char stringcmp(String a, String b) {
     if (a.len!=b.len) {
-        return FALSE;
+        return false;
     }
     for (size_t i=0;i<a.len;i++) {
         if (a.str[i]!=b.str[i]) {
-            return FALSE;
+            return false;
         }
 
     }
-    return TRUE;
+    return true;
 }
 
 String ztok(const char *str, char ch, size_t index) {

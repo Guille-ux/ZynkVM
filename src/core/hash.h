@@ -40,6 +40,6 @@ bool tableGet(ArenaManager *manager, Table *table, const char so[8], Value *valu
 bool tableDelete(ArenaManager *manager, Table *table, const char so[8]);
 void reAdjustTableCapacity(ArenaManager *manager, Table *table, uint32_t capacity);
 void initTableCapacity(ArenaManager *manager, Table *table, uint32_t capacity);
-uint32_t hash8Str(char *str);
+uint32_t hash8Str(const char *str);
 
 #endif

@@ -13,7 +13,7 @@
 /* 
 /* Copyright (c) 2025 Guillermo Leira Temes
 /* */
-
+#include <stdbool.h>
 #include "tmem.h"
 
 void tmemcpy(uint8_t *recv, uint8_t *sender, size_t large) {
@@ -33,26 +33,26 @@ uint32_t tlen(char *chars) {
 bool tmemcmp(uint8_t *a, uint8_t *b) {
     uint32_t la = tlen(a);
     if (la != tlen(b)) {
-        return FALSE;
+        return false;
     } else {
         for (uint32_t i=0;i<la;i++) {
             if (a[i]!=b[i]) {
-                return FALSE;
+                return false;
             }
         }
     }
-    return FALSE;
+    return false;
 }
 
 bool fmemcmp(uint8_t *a, uint8_t *b, uint32_t la, uint32_t lb) {
     if (la!=lb) {
-        return FALSE;
+        return false;
     } else {
         for (uint32_t i=0;i<la;i++) {
             if (a[i]!=b[i]) {
-                return FALSE;
+                return false;
             }
         }
     }
-    return TRUE;
+    return true;
 }

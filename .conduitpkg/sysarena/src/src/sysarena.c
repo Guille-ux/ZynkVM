@@ -1,242 +1,187 @@
-/*
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <https://www.gnu.org/licenses/>.
- *
- * Copyright (c) 2025 Guillermo Leira Temes
- */
+/* 
+ This program is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation, either version 3 of the License, or
+ any later version.
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ GNU General Public License for more details.
+ You should have received a copy of the GNU General Public License
+ along with this program. If not, see <https://www.gnu.org/licenses/>.
+ Copyright (c) 2025 Guillermo Leira Temes
+*/
 
 #include "../include/types.h"
 #include "../include/sysarena.h"
 
-// Initializes an arena as empty or unused.
+// Inicializa una arena como vacía
 void poor_arena_init(Arena *arena) {
+    if (!arena) return;
     arena->size = 0;
     arena->used = 0;
-    arena->base = (ptr_t)NULL;
-    arena->in_use = FALSE;
+    arena->base = NULL;
+    arena->in_use = false;
+    arena->is_contiguous = false;
 }
 
-// Initializes an arena with a specific size and memory base.
-void arena_init(Arena *arena, size_t size, ptr_t base) {
+// Inicializa una arena con datos concretos
+bool arena_init(Arena *arena, size_t size, ptr_t base) {
+    if (!arena || !base) return false;
     arena->size = size;
     arena->base = base;
     arena->used = 0;
-    arena->in_use = TRUE;
+    arena->in_use = true;
+    arena->is_contiguous = true;
+    return true;
 }
 
-// Allocates a block of 'size' bytes from an arena.
-// Returns NULL if there's not enough space.
-void* arena_alloc(Arena *arena, size_t size) {
-    // If the allocation exceeds available size, there's no memory.
-    if (arena->used + size > arena->size) {
-        return (ptr_t)NULL;
-    }
-    // Calculates the address of the new block.
-    ptr_t ptr = (ptr_t)((char*)arena->base + arena->used);
-    // Updates the arena's usage.
-    arena->used += size;
-    return ptr;
-}
-
-// Frees an entire arena, resetting its usage counter.
-void arena_free(Arena *arena) {
-    arena->used = 0;
-    arena->in_use = FALSE; // Marks the arena as unused.
-}
-
-// Initializes the arena manager.
-void sysarena_init(ArenaManager *manager, uint8_t *memory, Arena *arenas, size_t total_memory_size, size_t num_arenas) {
+// Inicializa el sistema de arenas (bloque génesis)
+bool sysarena_init(ArenaManager *manager, uint8_t *memory, Arena *arenas, size_t total_size, size_t num_arenas) {
+    if (!manager || !memory || !arenas || num_arenas < 1) return false;
     manager->arenas = arenas;
     manager->max_arenas = num_arenas;
-    manager->current_arena_idx = 0; // Starts with the first arena.
+    manager->initial_memory = memory;
+    manager->initial_size = total_size;
+    manager->current_arena_idx = 0;
 
-    if (num_arenas == 0) {
-        return; // No arenas to manage, exit.
-    }
-
-    // The first arena is initialized with the entire memory block.
-    arena_init(&manager->arenas[0], total_memory_size, (ptr_t)memory);
-
-    // Other arenas are initialized as empty.
+    // Bloque génesis ocupa toda la memoria
+    poor_arena_init(&manager->arenas[0]);
+    arena_init(&manager->arenas[0], total_size, memory);
     for (size_t i = 1; i < num_arenas; i++) {
         poor_arena_init(&manager->arenas[i]);
     }
+    return true;
 }
 
-// Checks if two arenas can be merged.
-bool arena_can_merge(Arena *a, Arena *b) {
-    // They can only be merged if both are not in use.
-    if (a->in_use == FALSE && b->in_use == FALSE) {
-        return TRUE;
-    }
-    return FALSE;
-}
-
-// Checks if an arena is completely empty.
-bool arena_is_void(Arena *a) {
-    // It's empty if it has no bytes used.
-    if (a->used == 0) {
-        return TRUE;
-    }
-    return FALSE;
-}
-
-// Merges the 'src' arena into the 'dest' arena.
-void arena_merge(Arena *dest, Arena *src) {
-    dest->size += src->size; // Increases the destination's size.
-    src->in_use = FALSE; // Marks the source as unused.
-    poor_arena_init(src); // Resets the source arena.
-}
-
-// Defragments arenas by attempting to merge empty and adjacent ones.
-void sysarena_defragment(ArenaManager *manager) {
-    for (size_t i = 0; i < manager->max_arenas; i++) {
-        // Only consider arenas that are not in use or are already void.
-        if (manager->arenas[i].in_use || !arena_is_void(&manager->arenas[i])) {
-            continue;
-        }
-
-        size_t x = i + 1;
-        // Search for an adjacent arena to merge.
-        while (x < manager->max_arenas) {
-            // Check if we can merge and if arena 'x' is also void.
-            if (arena_can_merge(&manager->arenas[i], &manager->arenas[x]) && arena_is_void(&manager->arenas[x])) {
-                break; // Found a mergeable partner.
-            }
-            x += 1;
-        }
-
-        // If a partner was found, perform the merge.
-        if (x < manager->max_arenas) {
-            arena_merge(&manager->arenas[i], &manager->arenas[x]);
-            // Re-check the current arena in case more merges are possible.
-            i--;
-        }
-    }
-}
-
-// Allocates memory in the arena system.
+// Reserva memoria siguiendo la lógica del bloque génesis
 void* sysarena_alloc(ArenaManager *manager, size_t size) {
-    if (size == 0) return (ptr_t)NULL; // Cannot allocate 0 bytes.
+    if (!manager || size == 0) return NULL;
 
-    ptr_t allocated_ptr = (ptr_t)NULL;
+    // Busca el bloque génesis (primer bloque libre y en uso)
+    size_t genesis_idx = 0;
+    while (genesis_idx < manager->max_arenas && (!manager->arenas[genesis_idx].in_use || manager->arenas[genesis_idx].used == manager->arenas[genesis_idx].size)) {
+        genesis_idx++;
+    }
+    if (genesis_idx >= manager->max_arenas) return NULL; // No hay génesis válido
 
-    // First, try to allocate from the current arena.
-    if (manager->current_arena_idx < manager->max_arenas &&
-        manager->arenas[manager->current_arena_idx].in_use) { // Must be initialized.
-        allocated_ptr = arena_alloc(&manager->arenas[manager->current_arena_idx], size);
-        if (allocated_ptr != (ptr_t)NULL) {
-            return allocated_ptr; // Allocation successful.
+    Arena *genesis = &manager->arenas[genesis_idx];
+
+    // Si el génesis es el único bloque libre con espacio, tomamos memoria de él
+    if (genesis->size - genesis->used >= size) {
+        // Buscar un slot libre para el nuevo bloque
+        size_t new_idx = genesis_idx;
+        // Si no hay espacio para desplazar, no se puede asignar
+        if (manager->max_arenas - 1 < genesis_idx) return NULL;
+
+        // Desplazar las arenas a la derecha para dejar hueco al génesis
+        for (size_t i = manager->max_arenas - 1; i > genesis_idx; --i) {
+            manager->arenas[i] = manager->arenas[i - 1];
+        }
+        // Crear arena nueva en la posición donde estaba el génesis
+        Arena *new_arena = &manager->arenas[genesis_idx];
+        new_arena->size = size;
+        new_arena->used = size;
+        new_arena->base = (uint8_t*)genesis->base + genesis->used;
+        new_arena->in_use = true;
+        new_arena->is_contiguous = true;
+
+        // Actualizar el génesis (ahora está a la derecha)
+        genesis = &manager->arenas[genesis_idx + 1];
+        genesis->base = (uint8_t*)new_arena->base + size;
+        genesis->size = genesis->size - size - genesis->used;
+        genesis->used = 0;
+        genesis->in_use = (genesis->size > 0);
+        genesis->is_contiguous = true;
+
+        return new_arena->base;
+    }
+
+    // Si hay otros bloques con espacio, buscar entre ellos (puedes personalizar esta parte)
+    for (size_t i = 0; i < manager->max_arenas; ++i) {
+        if (manager->arenas[i].in_use && manager->arenas[i].size - manager->arenas[i].used >= size) {
+            Arena *arena = &manager->arenas[i];
+            void* ptr = (uint8_t*)arena->base + arena->used;
+            arena->used += size;
+            return ptr;
         }
     }
 
-    // If the current arena fails, search in others.
-    for (size_t i = 0; i < manager->max_arenas; i++) {
-        if (i == manager->current_arena_idx) continue; // Skip already attempted current arena.
+    return NULL; // No hay espacio
+}
 
-        if (manager->arenas[i].in_use) { // Only if the arena is initialized and in use.
-            allocated_ptr = arena_alloc(&manager->arenas[i], size);
-            if (allocated_ptr != (ptr_t)NULL) {
-                manager->current_arena_idx = i; // Update the current arena.
-                return allocated_ptr; // Allocation successful.
+// Libera una arena entera y fusiona si es posible
+bool sysarena_free(ArenaManager *manager, void *ptr) {
+    if (!manager || !ptr) return false;
+    for (size_t i = 0; i < manager->max_arenas; i++) {
+        Arena *arena = &manager->arenas[i];
+        if (arena->in_use && arena->base &&
+            (uint8_t*)ptr >= (uint8_t*)arena->base && (uint8_t*)ptr < (uint8_t*)arena->base + arena->size) {
+            poor_arena_init(arena);
+            // Intentar fusionar con adyacentes
+            sysarena_defragment(manager);
+            return true;
+        }
+    }
+    return false;
+}
+
+// Fusiona arenas vacías y adyacentes, si es posible
+void sysarena_defragment(ArenaManager *manager) {
+    if (!manager) return;
+    for (size_t i = 0; i < manager->max_arenas - 1; i++) {
+        Arena *a = &manager->arenas[i];
+        Arena *b = &manager->arenas[i + 1];
+        // Si ambas están libres y son contiguas
+        if (!a->in_use && !b->in_use && a->size > 0 && b->size > 0 &&
+            (uint8_t*)a->base + a->size == (uint8_t*)b->base) {
+            a->size += b->size;
+            poor_arena_init(b);
+            // Desplazar arenas a la izquierda
+            for (size_t j = i + 1; j < manager->max_arenas - 1; j++) {
+                manager->arenas[j] = manager->arenas[j + 1];
             }
-        }
-    }
-
-    return (ptr_t)NULL; // No suitable arena found.
-}
-
-// Splits an arena into two.
-void sysarena_split(ArenaManager *manager, size_t arena_index, size_t size) {
-    // If index is out of range or arena is not in use, exit.
-    if (arena_index >= manager->max_arenas || manager->arenas[arena_index].in_use == FALSE) {
-        return;
-    }
-
-    Arena *src = &manager->arenas[arena_index];
-
-    // Cannot split if the size is greater than what's left in the arena.
-    if (src->size < size) {
-        return;
-    }
-
-    size_t new_arena_idx = manager->max_arenas; // Index for the new arena.
-    // Search for an empty slot for the new arena.
-    for (size_t i = 0; i < manager->max_arenas; i++) {
-        if (manager->arenas[i].in_use == FALSE) {
-            new_arena_idx = i;
-            break;
-        }
-    }
-
-    // If no free slot is found, we cannot split.
-    if (new_arena_idx == manager->max_arenas) {
-        return;
-    }
-
-    // If the found slot for new_arena_idx is already in use (complex situation),
-    // try to displace arenas.
-    if (manager->arenas[new_arena_idx].in_use == TRUE) {
-        sysarena_displacement(manager, new_arena_idx);
-    }
-
-    Arena *new_arena = &manager->arenas[new_arena_idx];
-
-    // The new arena starts right after the source's used space.
-    new_arena->base = (ptr_t)((char*)src->base + src->used);
-    new_arena->size = size;
-    new_arena->used = 0; // The new arena starts empty.
-    new_arena->in_use = TRUE; // Mark it as in use.
-
-    // Reduce the size of the source arena.
-    src->size -= size;
-}
-
-// Frees memory associated with a pointer.
-// This means resetting the entire arena the pointer belongs to.
-// It does NOT free individual blocks.
-void sysarena_free(ArenaManager *manager, void *ptr) {
-    for (size_t i = 0; i < manager->max_arenas; i++) {
-        ptr_t base = manager->arenas[i].base;
-        size_t size = manager->arenas[i].size;
-
-        // Check if the pointer is within this arena's memory range.
-        if (base != (ptr_t)NULL && ptr >= base && ptr < (ptr_t)((char*)base + size)) {
-            // Found the arena, free it (reset completely).
-            arena_free(&manager->arenas[i]);
-            sysarena_defragment(manager); // Attempt defragmentation after freeing.
-            return;
+            poor_arena_init(&manager->arenas[manager->max_arenas - 1]);
+            i--; // Reintentar por si hay más para fusionar
         }
     }
 }
 
-// Copies data from one arena struct to another.
-void copy_arena(Arena *dest, Arena *src) {
-    dest->in_use = src->in_use;
-    dest->base = src->base;
+// El resto de funciones pueden quedarse igual o adaptarse a esta lógica
+bool arena_can_merge(const Arena *a, const Arena *b) {
+    return (!a->in_use && !b->in_use);
+}
+bool arena_is_void(const Arena *a) {
+    return a->used == 0;
+}
+bool arena_merge(Arena *dest, Arena *src) {
+    if (!arena_can_merge(dest, src)) return false;
+    dest->size += src->size;
+    poor_arena_init(src);
+    return true;
+}
+void copy_arena(Arena *dest, const Arena *src) {
+    if (!dest || !src) return;
     dest->size = src->size;
     dest->used = src->used;
+    dest->base = src->base;
+    dest->in_use = src->in_use;
+    dest->is_contiguous = src->is_contiguous;
 }
-
-// Displaces arenas to reorder them.
 void sysarena_displacement(ArenaManager *manager, size_t where) {
-    if (where >= manager->max_arenas) {
-        return; // Index out of bounds.
+    // Puedes mantener o eliminar esta función según si la usas en split/merge
+}
+bool sysarena_split(ArenaManager *manager, size_t index, size_t size) {
+    // Puedes dejar esta función vacía o ajustarla si quieres soportar splits
+    return false;
+}
+bool sysarena_is_fully_merged(ArenaManager *manager) {
+    if (!manager) return false;
+    size_t active_arenas = 0;
+    for (size_t i = 0; i < manager->max_arenas; i++) {
+        if (manager->arenas[i].in_use) active_arenas++;
     }
-    // Move arenas from right to left from the end towards 'where'.
-    for (size_t i = (manager->max_arenas - 1); i > where; i--) {
-        if (i > 0) { // Ensure i-1 is a valid index.
-            copy_arena(&manager->arenas[i], &manager->arenas[i - 1]);
-        }
-    }
+    return active_arenas == 1 &&
+           manager->arenas[0].size == manager->initial_size &&
+           manager->arenas[0].base == manager->initial_memory;
 }

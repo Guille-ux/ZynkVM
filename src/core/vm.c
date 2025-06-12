@@ -25,62 +25,73 @@
 
 void load_chunk(ArenaManager *manager, uint8_t *code, Value *constants, Chunk *chunk, size_t len) {
     init_chunk(chunk);
-    for (size_t i=0;i<len;) {
+    size_t constants_idx = 0;
+    for (size_t i = 0; i < len;) {
 #ifndef STANDALONE
-	printf("[LOADING INSTRUCTION NUMBER %ld...]\n", i);
-	printf("[DATA] [CONSTANT INDEX %d] [INSTRUCTION CODE %d]\n", chunk->constants.count, code[i]);
-	switch (code[i]) {
-		case OP_RETURN: printf("OP_RETURN\n"); break; 
-		case OP_CONSTANT: printf("OP_CONSTANT\n"); break;
-		default: printf("Unknown Instruction\n"); break;
-	}
+        printf("[LOADING INSTRUCTION NUMBER %ld...]\n", i);
+        printf("[DATA] [CONSTANT INDEX %d] [INSTRUCTION CODE %d]\n", chunk->constants.count, code[i]);
 #endif
         writeChunk(manager, chunk, code[i], i);
-        if (code[i]==OP_CONSTANT) {
-            size_t index = addConstant(manager, chunk, constants[chunk->constants.count]);
+        if (code[i] == OP_CONSTANT) {
+            // Add the constant value and get its index
+            writeArray(manager, &chunk->constants, constants[constants_idx]);
+            size_t const_idx = chunk->constants.count - 1;
+            constants_idx++;
+            
+            // Write the index bytes
             uint8_t tmp[sizeof(common_size)];
 #ifndef BIG_ENDIAN
-            storeSizeIn8LEndian((common_size *)&index, tmp);
+            storeSizeIn8LEndian((common_size *)&const_idx, tmp);
 #else
-            storeSizeIn8BEndian((common_size *)&index, tmp);
+            storeSizeIn8BEndian((common_size *)&const_idx, tmp);
 #endif
+
 #ifndef STANDALONE
-	    printf("[Conversion Succesful]\n");
+            printf("[Conversion Successful]\n");
 #endif
-            for (char z=0;z<sizeof(common_size);z++) {
-                writeChunk(manager, chunk, tmp[z], i+z);
-		i++;
+            for (size_t z = 0; z < sizeof(common_size); z++) {
+                i++;
+                writeChunk(manager, chunk, tmp[z], i);
             }
-#ifndef STANDALONE
-	    printf("[NUMBER ADDED]\n");
-#endif
         }
-	i++;
+        i++;
     }
 }
 
 Value compareVals(Value a, Value b) {
     if (SAME_TYPE(a, b)) {
         if (IS_BOOL(a)) {
-            if (AS_BOOL(a)==AS_BOOL(b)) {
-                return BOOL_VAL(true);
-            } else {
-                return BOOL_VAL(false);
-            }
+            return BOOL_VAL(AS_BOOL(a) == AS_BOOL(b));
         } else if (IS_NUMBER(a)) {
-            if (AS_NUMBER(a)==AS_NUMBER(b)) {
-                return BOOL_VAL(true);
-            } else {
-                return BOOL_VAL(false);
-            }
+            return BOOL_VAL(AS_NUMBER(a) == AS_NUMBER(b));
         } else if (IS_STRING(a)) {
-            return BOOL_VAL(fmemcmp((uint8_t *)AS_CSTRING(a), (uint8_t *)AS_CSTRING(b), AS_STRING(a)->length, AS_STRING(b)->length));
-        } else {
-            // runtimeError (Unknown Type)
+            return BOOL_VAL(fmemcmp((uint8_t *)AS_CSTRING(a), 
+                                  (uint8_t *)AS_CSTRING(b), 
+                                  AS_STRING(a)->length, 
+                                  AS_STRING(b)->length));
+        } else if (IS_NULL(a)) {
+            return BOOL_VAL(true); // NULL == NULL
         }
-    } else {
-        return BOOL_VAL(false);
+        return NULL_VAL; // Unknown type comparison
     }
+    return BOOL_VAL(false); // Different types
+}
+
+static Value read_constant(ZynkVM *vm, bool *error) {
+    uint8_t *index_init = vm->ip;
+    vm->ip += sizeof(common_size);
+    common_size ret;
+#ifndef BIG_ENDIAN
+    store8InSizeLEndian(index_init, &ret);
+#else
+    store8InSizeBEndian(index_init, &ret);
+#endif
+    if (ret >= vm->chunk->constants.count) {
+        *error = true;
+        return NULL_VAL;
+    }
+    *error = false;
+    return vm->chunk->constants.values[ret];
 }
 
 ZynkResult run(ArenaManager *manager, ZynkVM *vm) {
@@ -91,6 +102,11 @@ ZynkResult run(ArenaManager *manager, ZynkVM *vm) {
     vm->ip += sizeof(common_size); \
     common_size ret; \
     store8InSizeLEndian(index_init, &ret); \
+    if (ret >= vm->chunk->constants.count) { \
+        vm->ip = vm->chunk->code + vm->chunk->count; /* Force exit */ \
+        Value error_val = {.type = ZYNK_NULL}; \
+        return error_val; \
+    } \
     vm->chunk->constants.values[ret]; \
 })
 #else
@@ -99,22 +115,46 @@ ZynkResult run(ArenaManager *manager, ZynkVM *vm) {
     vm->ip += sizeof(common_size); \
     common_size ret; \
     store8InSizeBEndian(index_init, &ret); \
+    if (ret >= vm->chunk->constants.count) { \
+        vm->ip = vm->chunk->code + vm->chunk->count; /* Force exit */ \
+        Value error_val = {.type = ZYNK_NULL}; \
+        return error_val; \
+    } \
     vm->chunk->constants.values[ret]; \
 })
 #endif
 
-#define BINARY(op) \
+#define BINARY_ADD 1
+#define BINARY_SUB 2
+#define BINARY_MUL 3
+#define BINARY_DIV 4
+
+#define BINARY(optype) \
     do { \
-            Value a = pop(vm); \
             Value b = pop(vm); \
-            if (a.type != b.type) { \
-                    /* runtimeError, they aren't the same */ \
-            } else { \
-                if (IS_BOOL(a)) { \
-                     /* runtimeError, los booleanos no se pueden sumar */ \
-                } else if (IS_NUMBER(a)) { \
-                    a.as.number=AS_NUMBER(a) op AS_NUMBER(b); \
+            Value a = pop(vm); \
+            if (IS_NULL(a) || IS_NULL(b)) { \
+                push(vm, NULL_VAL); \
+            } else if (a.type != b.type) { \
+                return ZYNK_RUNTIME_ERROR; \
+            } else if (IS_BOOL(a)) { \
+                return ZYNK_RUNTIME_ERROR; \
+            } else if (IS_NUMBER(a)) { \
+                double result; \
+                switch(optype) { \
+                    case BINARY_ADD: result = AS_NUMBER(a) + AS_NUMBER(b); break; \
+                    case BINARY_SUB: result = AS_NUMBER(a) - AS_NUMBER(b); break; \
+                    case BINARY_MUL: result = AS_NUMBER(a) * AS_NUMBER(b); break; \
+                    case BINARY_DIV: \
+                        if (AS_NUMBER(b) == 0) return ZYNK_RUNTIME_ERROR; \
+                        result = AS_NUMBER(a) / AS_NUMBER(b); \
+                        break; \
                 } \
+                push(vm, NUMBER_VAL(result)); \
+            } else if (IS_STRING(a) && optype == BINARY_ADD) { \
+                return ZYNK_RUNTIME_ERROR; \
+            } else { \
+                return ZYNK_RUNTIME_ERROR; \
             } \
     } while (false);
 
@@ -140,7 +180,9 @@ ZynkResult run(ArenaManager *manager, ZynkVM *vm) {
                 return ZYNK_OK;
             }
             case OP_CONSTANT: {
-                Value constant = RCONSTANT();
+                bool error;
+                Value constant = read_constant(vm, &error);
+                if (error) return ZYNK_RUNTIME_ERROR;
                 push(vm, constant);
                 break;
             }
@@ -161,19 +203,19 @@ ZynkResult run(ArenaManager *manager, ZynkVM *vm) {
                 break;
             }
             case OP_ADD: {
-                BINARY(+)
+                BINARY(BINARY_ADD)
                 break;
             }
             case OP_SUBSTRACT: {
-                BINARY(-);
-                break;
-            }
-            case OP_DIVIDE: {
-                BINARY(/);
+                BINARY(BINARY_SUB);
                 break;
             }
             case OP_MULTIPLY: {
-                BINARY(*);
+                BINARY(BINARY_MUL);
+                break;
+            }
+            case OP_DIVIDE: {
+                BINARY(BINARY_DIV);
                 break;
             }
             case OP_NULL: {
@@ -250,20 +292,22 @@ static void reset_stack(ZynkVM *vm) {
 }
 
 void push(ZynkVM *vm, Value value) {
-    *vm->stackTop = value;
-    if ((size_t)(vm->stackTop-vm->stack)<STACK_MAX) {
-        vm->stackTop++;
-    } else {
-        // panic(); futura función para errores
+    if ((size_t)(vm->stackTop - vm->stack) >= STACK_MAX) {
+#ifndef STANDALONE
+        fprintf(stderr, "Error: Stack overflow\n");
+#endif
+        return;
     }
+    *vm->stackTop = value;
+    vm->stackTop++;
 }
 
 Value pop(ZynkVM *vm) {
-    if (vm->stackTop - vm->stack>0) {
-        vm->stackTop--;
-    } else {
-        // panic(); o tambien puede ser runtimeError
+    if (vm->stackTop - vm->stack <= 0) {
+        // Return NULL value for empty stack
+        return NULL_VAL;
     }
+    vm->stackTop--;
     return *vm->stackTop;
 }
 
@@ -288,8 +332,15 @@ void freeObjs(ArenaManager *manager, ZynkVM *vm) {
 }
 
 void initVM(ZynkVM *vm) {
+    vm->chunk = NULL;
+    vm->ip = NULL;
     reset_stack(vm);
-    vm->objects=(Obj *)NULL;
+    vm->objects = NULL;
+    
+    // Inicializar el stack con valores NULL
+    for (int i = 0; i < STACK_MAX; i++) {
+        vm->stack[i] = NULL_VAL;
+    }
 }
 
 void freeVM(ArenaManager *manager, ZynkVM *vm) {

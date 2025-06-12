@@ -21,6 +21,13 @@
 #include "../common.h"
 
 #define DOUBLE_SIZE 8
+#define GROW_CAPACITY(capacity) \
+    ((capacity) < 8 ? 8 : (capacity) * 2)
+
+#define GROW_ARRAY(manager, type, pointer, oldCount, newCount) \
+    (type*)reallocate(manager, pointer, sizeof(type) * (oldCount), \
+        sizeof(type) * (newCount))
+
 
 typedef enum {
     ZYNK_OBJ_STRING,
